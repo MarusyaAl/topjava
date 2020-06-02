@@ -22,8 +22,8 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
         );
 
-        List<UserMealWithExcess> mealsTo = filteredByCycles(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
-        mealsTo.forEach(System.out::println);
+/*        List<UserMealWithExcess> mealsTo = filteredByCycles(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+        mealsTo.forEach(System.out::println);*/
 
         System.out.println(filteredByCycles(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
         System.out.println(filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
@@ -32,9 +32,8 @@ public class UserMealsUtil {
     private static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesPerDayMap = new HashMap<>();
         for (UserMeal meal : meals) {
-            Integer previousCalories = 0;
             LocalDate date = meal.getDateTime().toLocalDate();
-            previousCalories = caloriesPerDayMap.getOrDefault(date, 0);
+            Integer previousCalories = caloriesPerDayMap.getOrDefault(date, 0);
             caloriesPerDayMap.put(date, previousCalories + meal.getCalories());
         }
 

@@ -1,8 +1,5 @@
 package ru.javawebinar.topjava;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @see <a href="http://topjava.herokuapp.com">Demo application</a>
  * @see <a href="https://github.com/JavaOPs/topjava">Initial project</a>
