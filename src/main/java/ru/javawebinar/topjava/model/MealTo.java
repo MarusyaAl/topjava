@@ -27,7 +27,6 @@ public class MealTo {
                 ", excess=" + excess +
                 '}';
     }
-
     public LocalDateTime getDateTime() {
         return dateTime;
     }

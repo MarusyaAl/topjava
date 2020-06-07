@@ -1,0 +1,12 @@
+p {
+    text-align: center;
+}
+
+th {
+    text-decoration-style: wavy;
+    background: lightcoral;
+}
+
+td {
+    background: linen;
+}
