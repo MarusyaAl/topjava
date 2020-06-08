@@ -43,11 +43,10 @@ public class MealsUtil {
     }
 
     private static MealTo createTo(Meal meal, boolean excess) {
-
         return new MealTo(meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-d HH:mm\t");
+    public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d MMMM yyyy HH:mm\t");
 
     public static List<Meal> meals = Arrays.asList(
             new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),

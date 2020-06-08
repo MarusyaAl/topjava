@@ -3,6 +3,7 @@
 <%@ page import="ru.javawebinar.topjava.util.MealsUtil" %>
 <%@ page import="static ru.javawebinar.topjava.util.MealsUtil.meals" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -27,7 +28,8 @@
         <c:if test="${meal.excess}">
             <tr bgcolor="#cd5c5c">
         </c:if>
-        <td> ${LocalDateTime.parse(meal.dateTime, dtf)}
+        <td>${meal.dateTime.format(dtf)}
+
         </td>
         <td>${meal.description}
         </td>

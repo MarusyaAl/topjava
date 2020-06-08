@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -19,8 +20,8 @@ public class MealServlet extends HttpServlet {
         log.debug("forward to meals");
         response.setContentType("text/html;charset=utf-8");
         request.setAttribute("name", "Подсчет калорий");
-        request.setAttribute("meals", MealsUtil.getMealsTo());
         request.setAttribute("dtf", MealsUtil.dtf);
+        request.setAttribute("meals", MealsUtil.getMealsTo());
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
 }
