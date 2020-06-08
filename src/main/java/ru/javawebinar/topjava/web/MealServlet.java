@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
@@ -17,16 +16,11 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //  log.debug("forward to meals");
+        log.debug("forward to meals");
         response.setContentType("text/html;charset=utf-8");
         request.setAttribute("name", "Подсчет калорий");
         request.setAttribute("meals", MealsUtil.getMealsTo());
-
+        request.setAttribute("dtf", MealsUtil.dtf);
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
-
-      /*
-
-        PrintWriter pw = response.getWriter();
-        pw.println("<H1>Hello, world! или Привет мир</H1>");*/
     }
 }
