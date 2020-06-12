@@ -12,3 +12,13 @@ td {
     background: linen;
 }
 */
+
+A {
+    color: black;
+}
+A:visited {
+    color: black;
+}
+A:active {
+    color: black;
+}
