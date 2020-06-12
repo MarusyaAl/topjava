@@ -32,27 +32,31 @@ public class MealServlet extends HttpServlet {
         request.setAttribute("name", "Подсчет калорий");
         request.setAttribute("dtf", MealsUtil.dtf);
 
-        request.setAttribute("meals", MealsUtil.getMealsTo());
-        request.getRequestDispatcher("/meals.jsp").forward(request, response);
+        //  request.setAttribute("meals", MealsUtil.getMealsTo());
+        //     request.getRequestDispatcher("/meals.jsp").forward(request, response);
 
         String action = request.getParameter("action");
 
-        switch (action){
+        if (action == null) {
+            request.setAttribute("meals", dao.getAllMeals());
+            request.getRequestDispatcher("/meals.jsp").forward(request, response);
+            return;
+        }
+
+        switch (action) {
             case "delete":
                 int id = Integer.parseInt(request.getParameter("id"));
                 dao.deleteMeal(id);
-
-                request.setAttribute("meals", dao.getAllMeals());
-                request.getRequestDispatcher("/meals.jsp").forward(request, response);
-
+               response.sendRedirect("meals");
+               return;
             case "edit":
-           //     meal = meals.get(Integer.parseInt(id));
+                //     meal = meals.get(Integer.parseInt(id));
                 break;
             default:
                 throw new IllegalArgumentException("Action" + action + "is illegal");
         }
-     //   request.setAttribute("meal", getMealsTo());
-     //   request.getRequestDispatcher("/meals.jsp").forward(request, response);
+        //   request.setAttribute("meal", getMealsTo());
+        //   request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
 
     @Override

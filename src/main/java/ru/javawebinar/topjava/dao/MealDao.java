@@ -13,7 +13,6 @@ public class MealDao {
 
     public void deleteMeal(int id) {
         MealsUtil.getMealsTo().remove(getMealById(id));
-
     }
 
     public void updateMeal(MealTo meal) {
