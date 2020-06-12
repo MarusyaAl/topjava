@@ -22,7 +22,7 @@
         <th>Редактирование</th>
         <th>Удаление</th>
     </tr>
-    <c:forEach items="${meals}" var="meal">
+    <c:forEach items="${meals}" var="meals">
         <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
         <tr bgcolor="#faf0e6">
         <c:if test="${meal.excess}">
@@ -36,7 +36,7 @@
         <td>${meal.calories}
         </td>
         <td>Edit</td>
-        <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
+        <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
         </tr>
     </c:forEach>
 </table>

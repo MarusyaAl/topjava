@@ -30,7 +30,7 @@ public class MealServlet extends HttpServlet {
         log.debug("forward to meals");
         response.setContentType("text/html;charset=utf-8");
         request.setAttribute("name", "Подсчет калорий");
-        request.setAttribute("dtf", MealsUtil.dtf);
+        request.setAttribute("dtf", MealDao.dtf);
 
         //  request.setAttribute("meals", MealsUtil.getMealsTo());
         //     request.getRequestDispatcher("/meals.jsp").forward(request, response);
@@ -47,8 +47,8 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = Integer.parseInt(request.getParameter("id"));
                 dao.deleteMeal(id);
-               response.sendRedirect("meals");
-               return;
+                response.sendRedirect("meals");
+                return;
             case "edit":
                 //     meal = meals.get(Integer.parseInt(id));
                 break;
