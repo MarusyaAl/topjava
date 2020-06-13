@@ -6,7 +6,6 @@ import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Meal {
-    private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
     private Integer id;
 
@@ -27,7 +26,7 @@ public class Meal {
         this.calories = calories;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -36,7 +35,7 @@ public class Meal {
     }
 
     public boolean isNew(){
-        return id ==null;
+        return id==null;
     }
 
     public LocalDateTime getDateTime() {

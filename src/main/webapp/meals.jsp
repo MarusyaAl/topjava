@@ -22,7 +22,7 @@
         <th>Редактирование</th>
         <th>Удаление</th>
     </tr>
-    <c:forEach items="${meals}" var="meals">
+    <c:forEach items="${meals}" var="meal"  >
         <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
         <tr bgcolor="#faf0e6">
         <c:if test="${meal.excess}">

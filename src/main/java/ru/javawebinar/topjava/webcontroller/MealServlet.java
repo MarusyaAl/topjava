@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static ru.javawebinar.topjava.util.MealsUtil.getMealsTo;
-import static ru.javawebinar.topjava.util.MealsUtil.meals;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
@@ -32,13 +30,10 @@ public class MealServlet extends HttpServlet {
         request.setAttribute("name", "Подсчет калорий");
         request.setAttribute("dtf", MealDao.dtf);
 
-        //  request.setAttribute("meals", MealsUtil.getMealsTo());
-        //     request.getRequestDispatcher("/meals.jsp").forward(request, response);
-
         String action = request.getParameter("action");
 
         if (action == null) {
-            request.setAttribute("meals", dao.getAllMeals());
+            request.setAttribute("meals", dao.getAllMeals());  //MealsUtil.getMealsTo()
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
             return;
         }
