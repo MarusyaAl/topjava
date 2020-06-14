@@ -14,6 +14,7 @@
 </head>
 <body>
 <h2><p>${name}</p></h2>
+<p><a href="meals?action=add">Add Meal</a></p>
 <table border="1" cellpadding="8" cellspacing="0" style="margin: auto">
     <tr bgcolor="#5f9ea0">
         <th>Дата</th>
@@ -40,6 +41,7 @@
         </tr>
     </c:forEach>
 </table>
+
 </body>
 </html>
 

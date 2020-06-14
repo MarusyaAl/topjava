@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MealDao {
+public class MealDao implements MealDaoCommon {
 
     private Map<Integer, Meal> mealRepository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
@@ -36,7 +36,7 @@ public class MealDao {
         return meal;
     }
 
-    public void addMeal(MealTo meal) {
+    public void addMeal(Meal meal) {
 
     }
 
@@ -48,7 +48,7 @@ public class MealDao {
 
     }
 
-    public MealTo getMealById(int id) {
+    public Meal getMealById(int id) {
 
         return null;
     }
