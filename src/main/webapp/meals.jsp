@@ -14,7 +14,7 @@
 </head>
 <body>
 <h2><p>${name}</p></h2>
-<p><a href="meals?action=add">Add Meal</a></p>
+<p><a href="meals?action=create">Add Meal</a></p>
 <table border="1" cellpadding="8" cellspacing="0" style="margin: auto">
     <tr bgcolor="#5f9ea0">
         <th>Дата</th>
@@ -36,7 +36,7 @@
         </td>
         <td>${meal.calories}
         </td>
-        <td>Edit</td>
+        <td><a href="meals?action=update&id=${meal.id}">Edit</a></td>
         <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
         </tr>
     </c:forEach>

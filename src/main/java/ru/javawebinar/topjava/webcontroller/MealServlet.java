@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.webcontroller;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.MealDao;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,10 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -49,13 +45,11 @@ public class MealServlet extends HttpServlet {
                 dao.deleteMeal(id);
                 response.sendRedirect("meals");
                 return;
-            case "edit":
-                //     meal = meals.get(Integer.parseInt(id));
-                break;
-            case "add":
+            case "update":
+
+            case "create":
                 RequestDispatcher view = request.getRequestDispatcher("/oneMeal.jsp");
                 view.forward(request, response);
-
                 return;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -64,15 +58,22 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        response.setContentType("text/html;charset=utf-8");
+        String idString = request.getParameter("id");
+
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description");
-        Integer calories = Integer.parseInt(request.getParameter("calories"));
-        Meal meal = new Meal(id, dateTime, description, calories);
+        int calories = Integer.parseInt(request.getParameter("calories"));
+        Meal meal;
+        if (idString == null) {
+            meal = new Meal(dateTime, description, calories);
+        } else {
+            Integer id = Integer.parseInt(idString);
+            meal = new Meal(id, dateTime, description, calories);
+        }
+
         log.debug("save Meal: " + meal);
         dao.save(meal);
         response.sendRedirect("meals");
     }
-
-
 }

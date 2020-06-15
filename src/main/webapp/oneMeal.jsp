@@ -5,20 +5,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Add new meal</title>
+    <title>Meal form</title>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<h2>Add new meal</h2>
-<form method="POST" action='meals.jsp' name="formAddMeal">
+<h2>Meal form</h2>
+<form method="POST" action='meals'>
     <h5>Description:
         </h5><input
-                type="text" name="description"
+                type="text" name="description" required
                 value="<c:out value="${meal.description}" />"/> <br/>
             <h5>Calories :
                 </h5><input
-                        type="text" name="calories"
+                        type="text" name="calories" required
                         value="<c:out value="${meal.calories}" />"/> <br/>
                     <h5>DateTime : </h5>
                         <input type="datetime-local" value="${meal.dateTime}" name="dateTime" required><br/><br/><br/>
