@@ -58,6 +58,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
         String idString = request.getParameter("id");
 
@@ -65,7 +66,7 @@ public class MealServlet extends HttpServlet {
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
         Meal meal;
-        if (idString == null) {
+        if (idString == null || idString.equals("")) {
             meal = new Meal(dateTime, description, calories);
         } else {
             Integer id = Integer.parseInt(idString);

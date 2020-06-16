@@ -31,25 +31,19 @@ public class MealDao implements MealDaoCommon {
     public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d MMMM yyyy HH:mm\t");
 
     public Meal save(Meal meal) {
-        meal.setId(counter.getAndIncrement());
-        mealRepository.put(meal.getId(), meal);
+        if (meal.getId() == null) {
+            meal.setId(counter.getAndIncrement());
+            mealRepository.put(meal.getId(), meal);
+        } else
+            mealRepository.put(meal.getId(), meal);
         return meal;
-    }
-
-    public void addMeal(Meal meal) {
-
     }
 
     public void deleteMeal(int id) {
         mealRepository.remove(id);
     }
 
-    public void updateMeal(MealTo meal) {
-
-    }
-
     public Meal getMealById(int id) {
-
         return null;
     }
 

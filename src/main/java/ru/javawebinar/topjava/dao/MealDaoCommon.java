@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface MealDaoCommon {
 
-    void addMeal(Meal meal);
 
     Meal save(Meal meal);
 
@@ -16,7 +15,5 @@ public interface MealDaoCommon {
     Meal getMealById(int id);
 
     List<MealTo> getAllMeals();
-
-    void updateMeal(MealTo meal);
 
 }

@@ -12,17 +12,20 @@
 <body>
 <h2>Meal form</h2>
 <form method="POST" action='meals'>
+    <input type="hidden" name="id" required
+           value="<c:out value="${meal.id}" />"/> <br/>
     <h5>Description:
-        </h5><input
-                type="text" name="description" required
-                value="<c:out value="${meal.description}" />"/> <br/>
-            <h5>Calories :
-                </h5><input
-                        type="text" name="calories" required
-                        value="<c:out value="${meal.calories}" />"/> <br/>
-                    <h5>DateTime : </h5>
-                        <input type="datetime-local" value="${meal.dateTime}" name="dateTime" required><br/><br/><br/>
-                        <input type="submit" value="Submit"/>
+    </h5><input
+        type="text" name="description" required
+        value="<c:out value="${meal.description}" />"/> <br/>
+    <h5>Calories :
+    </h5><input
+        type="text" name="calories" required
+        value="<c:out value="${meal.calories}" />"/> <br/>
+    <h5>DateTime : </h5>
+    <input type="datetime-local" value="${meal.dateTime}" name="dateTime" required><br/><br/><br/>
+    <button type="submit">Save</button>
+
 </form>
 </body>
 </html>
