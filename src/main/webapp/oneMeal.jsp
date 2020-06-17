@@ -24,6 +24,7 @@
         value="<c:out value="${meal.calories}" />"/> <br/>
     <h5>DateTime : </h5>
     <input type="datetime-local" value="${meal.dateTime}" name="dateTime" required><br/><br/><br/>
+    name
     <button type="submit">Save</button>
 
 </form>

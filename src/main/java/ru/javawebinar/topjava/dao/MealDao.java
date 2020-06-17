@@ -44,7 +44,7 @@ public class MealDao implements MealDaoCommon {
     }
 
     public Meal getMealById(int id) {
-        return null;
+        return mealRepository.get(id);
     }
 
     public List<MealTo> getAllMeals() {

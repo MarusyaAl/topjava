@@ -30,24 +30,34 @@ public class MealServlet extends HttpServlet {
         request.setAttribute("name", "Подсчет калорий");
         request.setAttribute("dtf", MealDao.dtf);
 
+
         String action = request.getParameter("action");
 
         if (action == null) {
+            log.debug("get all meals");
             request.setAttribute("meals", dao.getAllMeals());
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
             return;
         }
 
+        int id=0;
         switch (action) {
             case "delete":
-                int id = Integer.parseInt(request.getParameter("id"));
+                id = Integer.parseInt(request.getParameter("id"));
                 log.debug("delete Meal № " + id);
                 dao.deleteMeal(id);
                 response.sendRedirect("meals");
                 return;
             case "update":
-
+                id = Integer.parseInt(request.getParameter("id"));
+                request.setAttribute("meal", dao.getMealById(id));
             case "create":
+                if (id==0){
+                    log.debug("create new meal");
+                }
+                else {
+                    log.debug("update meal № "+ id);
+                }
                 RequestDispatcher view = request.getRequestDispatcher("/oneMeal.jsp");
                 view.forward(request, response);
                 return;
@@ -61,7 +71,6 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
         String idString = request.getParameter("id");
-
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));

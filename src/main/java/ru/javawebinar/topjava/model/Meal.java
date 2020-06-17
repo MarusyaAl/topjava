@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Meal {
 
@@ -33,10 +32,6 @@ public class Meal {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public boolean isNew(){
-        return id==null;
     }
 
     public LocalDateTime getDateTime() {

@@ -23,14 +23,13 @@
         <th>Редактирование</th>
         <th>Удаление</th>
     </tr>
-    <c:forEach items="${meals}" var="meal"  >
+    <c:forEach items="${meals}" var="meal">
         <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
         <tr bgcolor="#faf0e6">
         <c:if test="${meal.excess}">
             <tr bgcolor="#cd5c5c">
         </c:if>
         <td>${meal.dateTime.format(dtf)}
-
         </td>
         <td>${meal.description}
         </td>
@@ -41,7 +40,6 @@
         </tr>
     </c:forEach>
 </table>
-
 </body>
 </html>
 
