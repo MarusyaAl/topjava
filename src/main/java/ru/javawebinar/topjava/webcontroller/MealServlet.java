@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.webcontroller;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.dao.MealDaoMemory;
 import ru.javawebinar.topjava.model.Meal;
 
 import javax.servlet.RequestDispatcher;
@@ -16,53 +16,51 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
-    private MealDao dao;
+    private MealDaoMemory dao;
 
     public MealServlet() {
-        super();
-        dao = new MealDao();
+        dao = new MealDaoMemory();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("forward to meals");
         response.setContentType("text/html;charset=utf-8");
-        request.setAttribute("name", "Подсчет калорий");
-        request.setAttribute("dtf", MealDao.dtf);
-
+        request.setAttribute("dtf", MealDaoMemory.DATE_TIME_FORMATTER);
 
         String action = request.getParameter("action");
 
         if (action == null) {
             log.debug("get all meals");
-            request.setAttribute("meals", dao.getAllMeals());
+            request.setAttribute("meals", dao.getAll());
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
             return;
         }
 
-        int id=0;
+        int id = 0;
         switch (action) {
             case "delete":
                 id = Integer.parseInt(request.getParameter("id"));
                 log.debug("delete Meal № " + id);
-                dao.deleteMeal(id);
+                dao.delete(id);
                 response.sendRedirect("meals");
                 return;
             case "update":
                 id = Integer.parseInt(request.getParameter("id"));
-                request.setAttribute("meal", dao.getMealById(id));
+                request.setAttribute("meal", dao.getMeal(id));
             case "create":
-                if (id==0){
+                if (id == 0) {
                     log.debug("create new meal");
-                }
-                else {
-                    log.debug("update meal № "+ id);
+                } else {
+                    log.debug("update meal № " + id);
                 }
                 RequestDispatcher view = request.getRequestDispatcher("/oneMeal.jsp");
                 view.forward(request, response);
                 return;
             default:
-                throw new IllegalArgumentException("Action " + action + " is illegal");
+                log.debug("get all meals");
+                request.setAttribute("meals", dao.getAll());
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }
 

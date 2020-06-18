@@ -2,23 +2,14 @@ p {
     text-align: center;
 }
 
-/*
-tr {
-    text-decoration-style: wavy;
-    background: lightcoral;
-}
-
-td {
-    background: linen;
-}
-*/
-
 A {
     color: black;
 }
+
 A:visited {
     color: black;
 }
+
 A:active {
     color: black;
 }
