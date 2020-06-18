@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.webcontroller;
+package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.MealDaoMemory;
