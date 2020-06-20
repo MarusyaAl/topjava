@@ -1,11 +1,11 @@
 package ru.javawebinar.topjava.dao;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
 
-import java.util.List;
+import java.util.Collection;
 
-public interface MealDao {
+
+public interface MealRepository {
 
     Meal save(Meal meal);
 
@@ -13,6 +13,6 @@ public interface MealDao {
 
     Meal getMeal(int id);
 
-    List<MealTo> getAll();
+    Collection<Meal> getAll();
 
 }

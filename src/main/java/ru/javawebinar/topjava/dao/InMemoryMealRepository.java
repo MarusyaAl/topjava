@@ -1,19 +1,15 @@
 package ru.javawebinar.topjava.dao;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MealDaoMemory implements MealDao {
+public class InMemoryMealRepository implements MealRepository {
 
     private Map<Integer, Meal> mealRepository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
@@ -28,10 +24,8 @@ public class MealDaoMemory implements MealDao {
         save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
     }
 
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-d   HH:mm");
-
     public Meal save(Meal meal) {
-        if (meal.getId() == null) {
+        if (meal.isNew()) {
             meal.setId(counter.getAndIncrement());
             mealRepository.put(meal.getId(), meal);
         } else
@@ -47,7 +41,7 @@ public class MealDaoMemory implements MealDao {
         return mealRepository.get(id);
     }
 
-    public List<MealTo> getAll() {
-        return MealsUtil.filteredByStreams((mealRepository.values()), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
+    public Collection<Meal> getAll() {
+        return mealRepository.values();
     }
 }

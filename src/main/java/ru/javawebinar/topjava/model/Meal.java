@@ -25,7 +25,6 @@ public class Meal {
         this.calories = calories;
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -52,5 +51,9 @@ public class Meal {
 
     public LocalTime getTime() {
         return dateTime.toLocalTime();
+    }
+
+    public boolean isNew(){
+        return getId() == null;
     }
 }

@@ -1,8 +1,9 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.dao.MealDaoMemory;
+import ru.javawebinar.topjava.dao.InMemoryMealRepository;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,34 +12,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
-    private MealDaoMemory dao;
+    private InMemoryMealRepository dao;
 
     public MealServlet() {
-        dao = new MealDaoMemory();
+        dao = new InMemoryMealRepository();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("forward to meals");
         response.setContentType("text/html;charset=utf-8");
-        request.setAttribute("dtf", MealDaoMemory.DATE_TIME_FORMATTER);
+        request.setAttribute("dtf", MealsUtil.DATE_TIME_FORMATTER);
 
         String action = request.getParameter("action");
 
-        if (action == null) {
-            log.debug("get all meals");
-            request.setAttribute("meals", dao.getAll());
-            request.getRequestDispatcher("/meals.jsp").forward(request, response);
-            return;
-        }
-
         int id = 0;
-        switch (action) {
+        switch (action == null ? "all" : action) {
             case "delete":
                 id = Integer.parseInt(request.getParameter("id"));
                 log.debug("delete Meal № " + id);
@@ -56,10 +51,11 @@ public class MealServlet extends HttpServlet {
                 }
                 RequestDispatcher view = request.getRequestDispatcher("/oneMeal.jsp");
                 view.forward(request, response);
-                return;
+            case "all":
             default:
                 log.debug("get all meals");
-                request.setAttribute("meals", dao.getAll());
+                request.setAttribute("meals",
+                        MealsUtil.filteredByStreams(dao.getAll(), LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }
