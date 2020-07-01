@@ -4,8 +4,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Meal {
+public class Meal extends AbstractBaseEntity implements Comparable<Meal> {
     private Integer id;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    private Integer userId;
 
     private final LocalDateTime dateTime;
 
@@ -18,6 +28,7 @@ public class Meal {
     }
 
     public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
+        super(id);
         this.id = id;
         this.dateTime = dateTime;
         this.description = description;
@@ -65,4 +76,13 @@ public class Meal {
                 ", calories=" + calories +
                 '}';
     }
+
+
+    @Override
+    public int compareTo(Meal meal) {
+        return this.dateTime.compareTo(meal.dateTime);
+    }
 }
+
+
+
