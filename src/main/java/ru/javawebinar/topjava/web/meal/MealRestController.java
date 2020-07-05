@@ -2,36 +2,44 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.MealService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
+
 @Controller
-public class MealRestController extends AbstractMealController {
+public class MealRestController {
 
-    @Override
+    private MealService service;
+
     public List<Meal> getAll() {
-        return super.getAll();
+        return service.getAll();
     }
 
-    @Override
+
     public Meal get(int id) {
-        return super.get(id);
+        return service.get(id, authUserId());
     }
 
-    @Override
     public Meal create(Meal meal) {
-        return super.create(meal);
+        return service.create(meal, authUserId());
     }
 
-    @Override
+
     public void delete(int id) {
-        super.delete(id);
-    }
-
-    @Override
-    public void update(Meal meal, int id) {
-        super.update(meal, id);
+        service.delete(id, authUserId());
     }
 
 
+    public void update(Meal meal) {
+        service.update(meal, authUserId());
+    }
+
+
+    public List<Meal> getFilteredByDate(LocalDate starDate, LocalDateTime startTime, LocalDate endDate, LocalDateTime endTime) {
+        return service.getFilteredByDate(starDate, startTime, endDate, endTime);
+    }
 }

@@ -2,11 +2,14 @@ package ru.javawebinar.topjava.repository.inmemory;
 
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.repository.MealDateTimeComparator;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
-import java.util.Collections;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,11 +21,13 @@ public class InMemoryMealRepository implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        for (Meal MEAL : MealsUtil.MEALS) {
+            save(MEAL, SecurityUtil.authUserId());
+        }
     }
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
@@ -36,16 +41,15 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id, int userId) {
         if (checkUser(id)) {
             return repository.remove(id) != null;
         }
         return false;
     }
 
-
     @Override
-    public Meal get(int id) {
+    public Meal get(int id, int userId) {
         if (checkUser(id))
             return repository.get(id);
         else return null;
@@ -53,16 +57,26 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll() {
-        if (repository != null) {
+        if (repository == null) {
             throw new NullPointerException("repository is empty");
         }
         List<Meal> result = (List<Meal>) repository.values();
-        Collections.sort(result);
+        result.sort(new MealDateTimeComparator());
         return result;
     }
 
     @Override
-    public boolean checkUser(int id) {
+    public List<Meal> getFilteredByDate(LocalDate starDate, LocalDateTime startTime, LocalDate endDate, LocalDateTime endTime) {
+        List<Meal> result = new ArrayList<>();
+        for (Meal meal : repository.values()) {
+            if (meal.getDateTime().isAfter(startTime) && meal.getDateTime().isBefore(endTime) && meal.getDate().isAfter(starDate) && meal.getDate().isBefore(endDate)) {
+                result.add(meal);
+            }
+        }
+        return result;
+    }
+
+    private boolean checkUser(int id) {
         return SecurityUtil.authUserId() == repository.get(id).getUserId() && id != 0;
     }
 }

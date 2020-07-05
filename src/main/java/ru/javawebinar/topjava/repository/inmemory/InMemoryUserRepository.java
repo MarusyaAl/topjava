@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.UserNameEmailComparator;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.util.*;
@@ -43,24 +44,23 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        List<User> result = (List<User>) repository.values();
-        Collections.sort(result);
+        List<User> result = new ArrayList<>(repository.values());
+        result.sort(new UserNameEmailComparator());
         return result;
     }
 
     @Override
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
-        List<User> result = (List<User>) repository.values();
-        for (User user : result) {
+        Collection<User> result = repository.values();
+       /* for (User user : result) {
             if (user.getEmail().equals(email)) {
                 return user;
             }
-        }
-        return null;
- /*       final Optional<User> first = result.stream()
+        }*/
+        Optional<User> element = result.stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst();
-        return first;*/
+        return element.orElse(null);
     }
 }
