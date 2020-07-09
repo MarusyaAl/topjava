@@ -4,7 +4,6 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 public interface MealRepository {
@@ -17,7 +16,7 @@ public interface MealRepository {
     // null if not found
     Meal get(int id, int userid);
 
-    List<Meal> getAll();
+    List<Meal> getAll(int userId);
 
     List<Meal> getFilteredByDate(LocalDate starDate, LocalDateTime startTime, LocalDate endDate, LocalDateTime endTim);
 

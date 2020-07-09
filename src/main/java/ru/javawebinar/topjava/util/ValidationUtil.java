@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.AbstractBaseEntity;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 public class ValidationUtil {
 
@@ -39,9 +38,5 @@ public class ValidationUtil {
         } else if (entity.getId() != id) {
             throw new IllegalArgumentException(entity + " must be with id=" + id);
         }
-    }
-
-    private boolean checkUser(int userId) {
-        return SecurityUtil.authUserId() == userId && userId != 0;
     }
 }
