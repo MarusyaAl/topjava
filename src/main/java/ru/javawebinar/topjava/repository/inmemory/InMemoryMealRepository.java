@@ -24,6 +24,10 @@ public class InMemoryMealRepository implements MealRepository {
         }
     }
 
+    public Map<Integer, Meal> getRepository() {
+        return repository;
+    }
+
     @Override
     public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {

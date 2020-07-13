@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository;
 import ru.javawebinar.topjava.service.MealService;
 
 import java.time.LocalDate;
@@ -18,15 +19,16 @@ import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 public class MealRestController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private MealService service;
+    //   private MealService service;
+
+    private MealService service = new MealService(new InMemoryMealRepository());
 
     public List<Meal> getAll(int userId) {
         log.info("getAll");
         return service.getAll(userId);
     }
 
-
-    public Meal get(int id) {
+    public Meal get(int id, int userId) {
         log.info("get {}", id);
         return service.get(id, authUserId());
     }
@@ -37,7 +39,7 @@ public class MealRestController {
         return service.create(meal, authUserId());
     }
 
-    public void delete(int id) {
+    public void delete(int id, int userId) {
         log.info("delete {}", id);
         service.delete(id, authUserId());
     }

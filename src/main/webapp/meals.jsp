@@ -21,6 +21,36 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+
+
+    <form method="post" action="meals">
+        <input type="hidden" name="id" value="${meal.id}">
+
+        <div>От даты (включая)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="date" value="${meal.date}" name="startDate" required>
+            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
+            До даты (включая)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="date" value="${meal.date}" name="endDate" required>
+        </div>
+
+        <br>
+        <div>От времени (включая)
+            <input type="time" value="${meal.date}" name="startDate" required>
+            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
+            До времени (исключая)
+            <input type="time" value="${meal.date}" name="endDate" required>
+        </div>
+        <br>
+        <button type="submit">Отфильтровать</button>
+    </form>
+    <br>
+
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
