@@ -3,11 +3,12 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,13 +20,9 @@ public class InMemoryMealRepository implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        for (Meal MEAL : MealsUtil.MEALS) {
-            save(MEAL, SecurityUtil.authUserId());
+        for (Meal meal : MealsUtil.MEALS) {
+            save(meal, 1);
         }
-    }
-
-    public Map<Integer, Meal> getRepository() {
-        return repository;
     }
 
     @Override
@@ -59,28 +56,34 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        if (repository.isEmpty()) {
-            throw new NullPointerException("repository is empty");
+        Comparator<Meal> dateTimeComparator =
+                Comparator.comparing(Meal::getDateTime);
+        List<Meal> meals = new ArrayList<>(repository.values());
+        List<Meal> result = new ArrayList<>();
+        for (Meal meal : meals) {
+            if (meal.getUserId() == userId) {
+                result.add(meal);
+            }
         }
-        Comparator<Meal> dateTimeComparator
-                = Comparator.comparing(Meal::getDateTime);
-        List<Meal> result = new ArrayList<>(repository.values());
         result.sort(dateTimeComparator);
         return result;
     }
 
     @Override
-    public List<Meal> getFilteredByDate(LocalDate starDate, LocalDateTime startTime, LocalDate endDate, LocalDateTime endTime) {
+    public List<Meal> getFilteredByDate(LocalDate starDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, int userId) {
         return repository.values().stream()
-                .filter(meal -> meal.getDateTime().isAfter(startTime) && meal.getDateTime().isBefore(endTime) && meal.getDate().isAfter(starDate) && meal.getDate().isBefore(endDate))
+                .filter(meal -> meal.getUserId() == userId)
+                .filter(meal -> DateTimeUtil.isBetweenDates(meal.getDate(), starDate, endDate))
+                .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getTime(), startTime, endTime))
+                .sorted()
                 .collect(Collectors.toList());
     }
 
     private boolean checkUser(int mealId) {
-        if (repository.get(mealId).getUserId() == null) {
+        if (repository.get(mealId) == null) {
             return false;
         }
-        return SecurityUtil.authUserId() == repository.get(mealId).getUserId() && mealId != 0;
+        return SecurityUtil.authUserId() == repository.get(mealId).getUserId();
     }
 }
 

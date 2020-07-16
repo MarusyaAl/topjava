@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository;
 import ru.javawebinar.topjava.service.MealService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -19,9 +19,7 @@ import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 public class MealRestController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    //   private MealService service;
-
-    private MealService service = new MealService(new InMemoryMealRepository());
+    private MealService service;
 
     public List<Meal> getAll(int userId) {
         log.info("getAll");
@@ -50,8 +48,8 @@ public class MealRestController {
         service.update(meal, authUserId());
     }
 
-    public List<Meal> getFilteredByDate(LocalDate starDate, LocalDateTime startTime, LocalDate endDate, LocalDateTime endTime) {
+    public List<Meal> getFilteredByDate(LocalDate starDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, int userId) {
         log.info("getFilteredByDate start date = {}, start time={}, end date ={}, end time = {}", starDate, startTime, endDate, endTime);
-        return service.getFilteredByDate(starDate, startTime, endDate, endTime);
+        return service.getFilteredByDate(starDate, startTime, endDate, endTime, userId);
     }
 }
