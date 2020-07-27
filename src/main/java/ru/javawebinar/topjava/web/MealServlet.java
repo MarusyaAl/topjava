@@ -28,14 +28,10 @@ public class MealServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         repository = new InMemoryMealRepository();
-     /*   try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
-            MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-        }*/
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //  String action = request.getParameter("action");
 
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
@@ -47,7 +43,6 @@ public class MealServlet extends HttpServlet {
                 Integer.parseInt(request.getParameter("calories")));
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        // mealRestController.update(meal, userId);
         repository.save(meal, userId);
         response.sendRedirect("meals");
     }
@@ -61,7 +56,6 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
-                //  mealRestController.delete(id, userId);
                 repository.delete(id, userId);
                 response.sendRedirect("meals");
                 break;
@@ -69,7 +63,6 @@ public class MealServlet extends HttpServlet {
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        //    mealRestController.get(getId(request), userId);
                         repository.get(getId(request), userId);
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);

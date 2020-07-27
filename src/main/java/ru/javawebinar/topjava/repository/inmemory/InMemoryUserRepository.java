@@ -51,7 +51,6 @@ public class InMemoryUserRepository implements UserRepository {
         List<User> result = new ArrayList<>(repository.values());
         result.sort(userNameEmailComparator);
         return result;
-
     }
 
     @Override
