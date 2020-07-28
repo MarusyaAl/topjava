@@ -58,16 +58,10 @@ public class InMemoryMealRepository implements MealRepository {
     public List<Meal> getAll(int userId) {
         Comparator<Meal> dateTimeComparator =
                 Comparator.comparing(Meal::getDateTime);
-        //  return filterByPredicate(userId,  meal -> true, dateTimeComparator);
-        return repository.values().stream()
-                .filter(meal -> meal.getUserId() == userId)
-                .sorted(dateTimeComparator)
-                .collect(Collectors.toList());
+        return filterByPredicate(userId, meal -> true, dateTimeComparator);
     }
 
-    private List<Meal> filterByPredicate(int userId, Predicate<Meal> filter) {
-        Comparator<Meal> dateTimeComparator =
-                Comparator.comparing(Meal::getDateTime);
+    private List<Meal> filterByPredicate(int userId, Predicate<Meal> filter, Comparator<Meal> dateTimeComparator) {
         return repository.values().stream()
                 .filter(meal -> meal.getUserId() == userId)
                 .filter(filter)
@@ -77,11 +71,9 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getFilteredByDate(LocalDate starDate, LocalDate endDate, int userId) {
-        return repository.values().stream()
-                .filter(meal -> meal.getUserId() == userId)
-                .filter(meal -> DateTimeUtil.isBetweenDates(meal.getDate(), starDate, endDate))
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
+        Comparator<Meal> dateTimeComparator =
+                Comparator.comparing(Meal::getDateTime).reversed();
+        return filterByPredicate(userId, meal -> DateTimeUtil.isBetweenDates(meal.getDate(), starDate, endDate), dateTimeComparator);
     }
 
     private boolean checkUser(int mealId, int userId) {
