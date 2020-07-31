@@ -40,7 +40,7 @@ public class MealService {
         checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 
-    public List<Meal> getFilteredByDate(LocalDate starDate, LocalDate endDate, int userId) {
-        return repository.getFilteredByDate(starDate, endDate, userId);
+    public List<Meal> getBetweenHalfOpen(LocalDate starDate, LocalDate endDate, int userId) {
+        return repository.getBetweenHalfOpen(starDate, endDate, userId);
     }
 }

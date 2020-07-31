@@ -23,7 +23,7 @@
     <h2>Meals</h2>
 
 
-    <form method="post" action="meals">
+    <form method="post" action="filter">
         <input type="hidden" name="id" value="${meal.id}">
 
         <div>От даты (включая)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

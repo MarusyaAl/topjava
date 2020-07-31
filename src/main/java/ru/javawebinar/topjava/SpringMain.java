@@ -28,12 +28,20 @@ public class SpringMain {
             mealRestController.create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Кофе", 500));
             mealRestController.create(new Meal(LocalDateTime.of(2020, Month.APRIL, 12, 17, 0), "Пицца", 1500));
             mealRestController.create(new Meal(LocalDateTime.of(2020, Month.AUGUST, 15, 21, 30), "Пельмени", 1000));
-            final List<MealTo> filteredByDate = mealRestController.getFilteredByDate(LocalTime.of(9, 20), LocalTime.of(22, 50),
+            final List<MealTo> filteredByDate = mealRestController.getBetweenHalfOpen(LocalTime.of(9, 20), LocalTime.of(22, 50),
                     LocalDate.of(2020, 1, 1), LocalDate.of(2020, 3, 25));
 
             for (MealTo meal : filteredByDate) {
                 System.out.println(meal);
             }
         }
+        String first = "Ягода малина";
+        String second = "лина";
+        boolean result = Cont(first, second);
+        System.out.println(result);
+
+    }
+    private static boolean Cont(String first, String second){
+        return first.contains(second);
     }
 }
