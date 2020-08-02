@@ -23,31 +23,28 @@
     <h2>Meals</h2>
 
 
-    <form method="post" action="filter">
-        <input type="hidden" name="id" value="${meal.id}">
+    <form method="get" action="meals">
+        <input type="hidden" name="action" value="filter">
 
-        <div>От даты (включая)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="date" value="${meal.date}" name="startDate" required>
-            &nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;
-            До даты (включая)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="date" value="${meal.date}" name="endDate" required>
-        </div>
+        <dl>
+            <dt>From Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</dt>
+            <dd><input type="date" value="${param.startDate}" name="startDate" required></dd>
+        </dl>
+        <dl>
+            <dt>To Date</dt>
+            <dd><input type="date" value="${param.endDate}" name="endDate" required></dd>
+        </dl>
 
+        <dl>
+            <dt>From Time</dt>
+            <dd><input type="time" value="${param.startTime}" name="startTime" required></dd>
+        </dl>
+        <dl>
+            <dt>To Time</dt>
+            <dd><input type="time" value="${param.endDate}" name="endTime" required></dd>
+        </dl>
         <br>
-        <div>От времени (включая)
-            <input type="time" value="${meal.date}" name="startDate" required>
-            &nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;
-            До времени (исключая)
-            <input type="time" value="${meal.date}" name="endDate" required>
-        </div>
-        <br>
-        <button type="submit">Отфильтровать</button>
+        <button type="submit">Filter</button>
     </form>
     <br>
 
