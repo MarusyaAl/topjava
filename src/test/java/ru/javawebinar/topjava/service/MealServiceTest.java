@@ -79,7 +79,7 @@ public class MealServiceTest {
     public void update() throws Exception {
         Meal updated = MealTestData.getUpdated();
         service.update(updated, USER_ID);
-        assertMatch(service.get(MEAL_ID_1, USER_ID), updated);
+        assertMatch(service.get(MEAL_ID_3, USER_ID), updated);
     }
 
     @Test
