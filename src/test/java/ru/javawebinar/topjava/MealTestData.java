@@ -9,7 +9,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MealTestData {
-    public static final int USER_ID = 100000;
+    public static final int USER_ID = UserTestData.getUserId();
     public static final int ANOTHER_USER_ID = 100009;
     public static final int MEAL_ID_4 = 100005;
     public static final int MEAL_ID_1 = 100002;
@@ -39,7 +39,7 @@ public class MealTestData {
     }
 
     public static void assertMatch(Meal actual, Meal expected) {
-        assertThat(actual);
+        assertThat(actual).isEqualToComparingFieldByField(expected);
         //   assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered", "roles");
     }
 

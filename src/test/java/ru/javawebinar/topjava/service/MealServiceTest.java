@@ -26,7 +26,8 @@ import static ru.javawebinar.topjava.MealTestData.getNew;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
+        "classpath:spring/spring-db.xml",
+        "classpath:spring/spring-repository-jdbc.xml"
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
@@ -59,7 +60,7 @@ public class MealServiceTest {
 
     @Test
     public void get() throws Exception {
-        Meal meal = service.get(MEAL_ID_4, USER_ID);
+        Meal meal = service.get(MEAL_ID_5, USER_ID);
         assertMatch(meal, MEAL_4);
     }
 
@@ -79,7 +80,7 @@ public class MealServiceTest {
     public void update() throws Exception {
         Meal updated = MealTestData.getUpdated();
         service.update(updated, USER_ID);
-        assertMatch(service.get(MEAL_ID_3, USER_ID), updated);
+        assertMatch(service.get(MEAL_ID_2, USER_ID), updated);
     }
 
     @Test

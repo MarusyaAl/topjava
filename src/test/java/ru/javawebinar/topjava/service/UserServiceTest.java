@@ -22,7 +22,8 @@ import static ru.javawebinar.topjava.UserTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
+        "classpath:spring/spring-db.xml",
+        "classpath:spring/spring-repository-jdbc.xml"
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
@@ -94,6 +95,6 @@ public class UserServiceTest {
     @Test
     public void getAll() throws Exception {
         List<User> all = service.getAll();
-        assertMatch(all, ADMIN, USER);
+        assertMatch(all, ADMIN, USER, USER2);
     }
 }
