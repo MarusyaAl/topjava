@@ -17,14 +17,10 @@ public class UserTestData {
 
     public static final User USER = new User(USER_ID, "User", "user@yandex.ru", "password", Role.USER);
     public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ADMIN);
-    public static final User USER2 = new User(USER_ID+2, "User2", "user2@yandex.ru", "password2", Role.USER);
+    public static final User USER2 = new User(USER_ID + 2, "User2", "user2@yandex.ru", "password2", Role.USER);
 
     public static User getNew() {
         return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.USER));
-    }
-
-    public static int getUserId() {
-        return USER_ID;
     }
 
     public static User getUpdated() {
