@@ -2,7 +2,10 @@ package ru.javawebinar.topjava.service;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Stopwatch;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -14,6 +17,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -31,10 +35,9 @@ public class MealServiceTest {
     @Autowired
     private MealService service;
 
-    private final TestMatcher<Meal> TEST_MATCHER_WITHOUT_USER = TestMatcher.usingFieldsComparator("user");
-
     @Rule
-    public TimeRule timeRule = new TimeRule();
+    public MyStopWatch timeRule = new MyStopWatch();
+
 
     @Test
     public void delete() throws Exception {
@@ -58,14 +61,13 @@ public class MealServiceTest {
         int newId = created.id();
         Meal newMeal = getNew();
         newMeal.setId(newId);
-        TestMatcher<Meal> testMatcher = TestMatcher.usingFieldsComparator("user");
-        TEST_MATCHER_WITHOUT_USER.assertMatch(created, newMeal);
+        MEAL_MATCHER.assertMatch(created, newMeal);
     }
 
     @Test
     public void get() throws Exception {
         Meal actualMeal = service.get(ADMIN_MEAL_ID, ADMIN_ID);
-        TEST_MATCHER_WITHOUT_USER.assertMatch(actualMeal, ADMIN_MEAL1);
+        MEAL_MATCHER.assertMatch(actualMeal, ADMIN_MEAL1);
     }
 
     @Test
@@ -82,7 +84,12 @@ public class MealServiceTest {
     public void update() throws Exception {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        TEST_MATCHER_WITHOUT_USER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
+        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
+    }
+
+    @Test
+    public void updateNotFound() throws Exception {
+        assertThrows(NullPointerException.class, () -> service.update(getUpdatedNotExist(), USER_ID));
     }
 
     @Test
@@ -92,14 +99,12 @@ public class MealServiceTest {
 
     @Test
     public void getAll() throws Exception {
-        TestMatcher<Meal> testMatcher = TestMatcher.usingFieldsComparator("user");
-        testMatcher.assertMatch(service.getAll(USER_ID), MEALS);
-        //     MEAL_MATCHER.assertMatch(service.getAll(USER_ID), MEALS);
+           MEAL_MATCHER.assertMatch(service.getAll(USER_ID), MEALS);
     }
 
     @Test
     public void getBetweenInclusive() throws Exception {
-        TEST_MATCHER_WITHOUT_USER.assertMatch(service.getBetweenInclusive(
+        MEAL_MATCHER.assertMatch(service.getBetweenInclusive(
                 LocalDate.of(2020, Month.JANUARY, 30),
                 LocalDate.of(2020, Month.JANUARY, 30), USER_ID),
                 MEAL3, MEAL2, MEAL1);
@@ -107,6 +112,18 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenWithNullDates() throws Exception {
-        TEST_MATCHER_WITHOUT_USER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), MEALS);
+        MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), MEALS);
     }
+
+    @Test
+    public void getTestInfo() throws Exception {
+        List<String> testInf = MyStopWatch.allTestInfo;
+        System.out.println("");
+        System.out.println("Results test info:");
+        for (String line : testInf){
+            System.out.println(line);
+        }
+    }
+
+
 }

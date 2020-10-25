@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.rules.Stopwatch;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -26,9 +27,8 @@ public class TimeRule implements TestRule {
                 statement.evaluate();
                 long end = System.currentTimeMillis();
                 long totalTime = end - start;
-
-                log.info("Execution time is {} miliseconds ", totalTime);
                 log.info("Execution time is {}", sdf.format(totalTime));
+
             }
         };
     }
