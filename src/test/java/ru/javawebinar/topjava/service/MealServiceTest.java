@@ -1,23 +1,21 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Stopwatch;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.javawebinar.topjava.TestMatcher;
+
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -38,6 +36,8 @@ public class MealServiceTest {
     @Rule
     public MyStopWatch timeRule = new MyStopWatch();
 
+    @ClassRule
+    public static MyTotalStopWatch totalInfo = new MyTotalStopWatch();
 
     @Test
     public void delete() throws Exception {
@@ -88,8 +88,8 @@ public class MealServiceTest {
     }
 
     @Test
-    public void updateNotFound() throws Exception {
-        assertThrows(NullPointerException.class, () -> service.update(getUpdatedNotExist(), USER_ID));
+    public void updateMealNotExist() throws Exception {
+        assertThrows(NotFoundException.class, () -> service.update(getUpdatedNotExist(), USER_ID));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class MealServiceTest {
 
     @Test
     public void getAll() throws Exception {
-           MEAL_MATCHER.assertMatch(service.getAll(USER_ID), MEALS);
+        MEAL_MATCHER.assertMatch(service.getAll(USER_ID), MEALS);
     }
 
     @Test
@@ -114,16 +114,4 @@ public class MealServiceTest {
     public void getBetweenWithNullDates() throws Exception {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), MEALS);
     }
-
-    @Test
-    public void getTestInfo() throws Exception {
-        List<String> testInf = MyStopWatch.allTestInfo;
-        System.out.println("");
-        System.out.println("Results test info:");
-        for (String line : testInf){
-            System.out.println(line);
-        }
-    }
-
-
 }

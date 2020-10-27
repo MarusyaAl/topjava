@@ -35,6 +35,7 @@ public class MealTestData {
     public static Meal getUpdated() {
         return new Meal(MEAL1_ID, MEAL1.getDateTime(), "Обновленный завтрак", 200);
     }
+
     public static Meal getUpdatedNotExist() {
         return new Meal(10200, MEAL1.getDateTime(), "Колбаса копченая", 500);
     }
