@@ -1,18 +1,16 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.rules.Stopwatch;
+import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-import java.util.logging.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
-public class MyTotalStopWatch extends Stopwatch {
+public class MyTotalStopWatch extends TestWatcher {
 
-    private static Logger log = Logger.getLogger(MyStopWatch.class.getName());
+    private static final org.slf4j.Logger log = getLogger(MyStopWatch.class.getName());
 
     @Override
-    protected void succeeded(long nanos, Description description) {
-        for (String line : MyStopWatch.allTestInfo) {
-            log.info(line);
-        }
+    protected void succeeded(Description description) {
+        log.info(MyStopWatch.allTestInfo.toString());
     }
 }

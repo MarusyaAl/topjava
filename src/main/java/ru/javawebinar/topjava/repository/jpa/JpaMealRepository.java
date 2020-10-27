@@ -31,13 +31,12 @@ public class JpaMealRepository implements MealRepository {
             int idMeal = meal.getId();
             Meal mealFromDB = em.find(Meal.class, idMeal);
             if (mealFromDB == null) {
-                throw new NotFoundException("this meal is not exist");
-            }
-            else if (mealFromDB.getUser().getId() == userId) {
+                return null;
+            } else if (mealFromDB.getUser().getId() == userId) {
                 meal.setUser(ref);
                 return em.merge(meal);
             }
-            throw new NotFoundException("user is not the own of the meal");
+            return null;
         }
     }
 
