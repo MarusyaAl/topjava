@@ -7,7 +7,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MyTotalStopWatch extends TestWatcher {
 
-    private static final org.slf4j.Logger log = getLogger(MyStopWatch.class.getName());
+    private static final org.slf4j.Logger log = getLogger(MyTotalStopWatch.class.getName());
 
     @Override
     protected void succeeded(Description description) {

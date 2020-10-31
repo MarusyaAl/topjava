@@ -18,7 +18,7 @@ public class MyStopWatch extends Stopwatch {
     @Override
     protected void finished(long nanos, Description description) {
         String testName = description.getMethodName();
-        String testInfo = String.format("%s : %d mc",
+        String testInfo = String.format("\n %s: %d mcs",
                 testName, TimeUnit.NANOSECONDS.toMicros(nanos));
         log.info(testInfo);
         allTestInfo.add(testInfo);
