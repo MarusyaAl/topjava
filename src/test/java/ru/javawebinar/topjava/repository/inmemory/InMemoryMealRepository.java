@@ -12,10 +12,7 @@ import ru.javawebinar.topjava.util.Util;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -28,15 +25,16 @@ public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, InMemoryBaseRepository<Meal>> usersMealsMap = new ConcurrentHashMap<>();
 
     {
-        InMemoryBaseRepository<Meal> userMeals = new InMemoryBaseRepository<>();
-        MealTestData.MEALS.forEach(meal -> userMeals.map.put(meal.getId(), meal));
+        var userMeals = new InMemoryBaseRepository<Meal>();
+        MealTestData.meals.forEach(meal -> userMeals.map.put(meal.getId(), meal));
         usersMealsMap.put(UserTestData.USER_ID, userMeals);
     }
 
 
     @Override
     public Meal save(Meal meal, int userId) {
-        InMemoryBaseRepository<Meal> meals = usersMealsMap.computeIfAbsent(userId, uid -> new InMemoryBaseRepository<>());
+        Objects.requireNonNull(meal, "meal must not be null");
+        var meals = usersMealsMap.computeIfAbsent(userId, uid -> new InMemoryBaseRepository<>());
         return meals.save(meal);
     }
 
