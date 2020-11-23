@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DataJpaUserRepository implements UserRepository {
@@ -17,9 +18,20 @@ public class DataJpaUserRepository implements UserRepository {
         this.crudRepository = crudRepository;
     }
 
+    public CrudUserRepository getCrudRepository() {
+        return crudRepository;
+    }
+
     @Override
     public User save(User user) {
         return crudRepository.save(user);
+       /* User userInRepository = get(user.id());
+        if (userInRepository==null){
+            crudRepository.save(user);
+            return user;
+        }
+        crudRepository.saveAndFlush()
+        return crudRepository.save(user);*/
     }
 
     @Override

@@ -22,14 +22,8 @@ import java.util.List;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(resolver = ActiveDbProfileResolver.class)
-public class UserServiceTest {
+
+public class UserServiceTest extends ServiceTest {
 
     @Autowired
     private UserService service;
@@ -81,12 +75,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getByEmail() {
-        User user = service.getByEmail("admin@gmail.com");
-        USER_MATCHER.assertMatch(user, admin);
-    }
-
-    @Test
     public void update() {
         User updated = getUpdated();
         service.update(updated);
@@ -97,5 +85,12 @@ public class UserServiceTest {
     public void getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, user);
+    }
+
+
+    @Test
+    public void getByEmail() {
+        User user = service.getByEmail("admin@gmail.com");
+        USER_MATCHER.assertMatch(user, admin);
     }
 }
