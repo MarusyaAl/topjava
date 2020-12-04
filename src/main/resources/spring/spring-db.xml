@@ -11,37 +11,47 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-    <!--    <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>-->
-
-    <context:component-scan base-package="ru.javawebinar.**.repository.datajpa"/>
-    <jpa:repositories base-package="ru.javawebinar.**.repository.datajpa"/>
-
+    <!--  При старте приложения на БД выполняются скрипты: создание схемы + наполнение данными (инициализирует БД скриптами). Нужно всегда -->
     <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
         <jdbc:script location="${jdbc.initLocation}"/>
         <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
     </jdbc:initialize-database>
 
+    <beans profile="jdbc">
+        <!--    нужно только для jdbc. Создает бины класса JdbcMealRepository -->
+            <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
+            <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+                <constructor-arg ref="dataSource"/>
+            </bean>
 
+            <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+                <constructor-arg ref="jdbcTemplate"/>
+            </bean>
+    </beans>
 
-    <!--
-        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
-        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-            <constructor-arg ref="dataSource"/>
-        </bean>
+    <beans profile="datajpa">
+         <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
+        <!--    нужно только для datajpa - указывает на пакет с репозиторием -->
+        <context:component-scan base-package="ru.javawebinar.**.repository.datajpa"/>
 
-        <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-            <constructor-arg ref="jdbcTemplate"/>
-        </bean>
-    -->
+        <!--    дополнение. указывает пакет, где лежат интерфейсы репозиториев (именно интерфейсы!), реализацию которых Spring будет генерировать сам на основании указанных там описаний. -->
+        <jpa:repositories base-package="ru.javawebinar.**.repository.datajpa"/>
+    </beans>
+
+    <beans profile="jpa">
+        <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
+    </beans>
 
     <beans profile="datajpa,jpa">
+        <!-- тоже для dataJpa и jpa, создает сущности. и в пропертях описывается маппинг, правда до конца не понимаю,
+        чтт на что маппится. и что такое jpaVendorAdapter тоже не могу понять. Vendor - тут видимо hibernate, а может быть какие-то другие реализации ORM.  -->
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
               p:dataSource-ref="dataSource"
               p:packagesToScan="ru.javawebinar.**.model">
-            <!--p:persistenceUnitName="persistenceUnit">-->
 
+            <!--p:persistenceUnitName="persistenceUnit">-->
             <property name="jpaPropertyMap">
                 <map>
                     <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
@@ -59,30 +69,16 @@
             </property>
         </bean>
 
+        <!-- Это декларируем, что транзакции объявляем не явно вручную, а помечая методы аннотацией @Transactional.
+ Тогда Spring "замечает" эти аннотации и делает эти методы в транзакции. -->
+        <tx:annotation-driven/>
     </beans>
 
     <beans profile="hsqldb">
         <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
 
-        <tx:annotation-driven/>
-
-        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-              p:dataSource-ref="dataSource"
-              p:packagesToScan="ru.javawebinar.**.model">
-            <!--p:persistenceUnitName="persistenceUnit">-->
-
-            <property name="jpaVendorAdapter">
-                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-                      p:showSql="${jpa.showSql}">
-                </bean>
-            </property>
-        </bean>
-
-        <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
-        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
-              p:entityManagerFactory-ref="entityManagerFactory"/>
-
         <!--no pooling-->
+        <!-- Бин dataSource нужен для всех реализаций, но его параметры зависят от БД (драйвер, url, логин/пароль). В таком виде этот бин нужен для профиля hsqldb.-->
         <bean id="dataSource"
               class="org.springframework.jdbc.datasource.DriverManagerDataSource"
               p:driverClassName="org.hsqldb.jdbcDriver"
@@ -92,66 +88,25 @@
     </beans>
 
     <beans profile="postgres">
+        <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
 
-        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-              p:dataSource-ref="dataSource"
-              p:packagesToScan="ru.javawebinar.**.model">
-            <!--p:persistenceUnitName="persistenceUnit">-->
-
-            <property name="jpaVendorAdapter">
-                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-                      p:showSql="${jpa.showSql}">
-                </bean>
-            </property>
-        </bean>
-
-        <tx:annotation-driven/>
-        <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
-        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
-              p:entityManagerFactory-ref="entityManagerFactory"/>
         <!--
             For postgres driver logging
             It uses java.util.logging and logged via jul-to-slf4j bridge
             https://stackoverflow.com/a/27296470/548473
         -->
+        <!-- Это для логирования драйвера postgres - т. е. только для postgres нужно. -->
         <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
             <property name="staticMethod" value="org.slf4j.bridge.SLF4JBridgeHandler.install"/>
         </bean>
 
-        <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
-
+        <!-- Бин dataSource нужен для всех реализаций, но его параметры зависят от БД (драйвер, url, логин/пароль). В таком виде этот бин нужен для профиля postgres.-->
         <bean id="dataSource"
               class="org.apache.tomcat.jdbc.pool.DataSource"
               p:driverClassName="org.postgresql.Driver"
               p:url="${database.url}"
               p:username="${database.username}"
               p:password="${database.password}"/>
-
-    </beans>
-    <beans profile="jdbc">
-        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
-        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-            <constructor-arg ref="dataSource"/>
-        </bean>
-
-        <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-            <constructor-arg ref="jdbcTemplate"/>
-        </bean>
     </beans>
 
-
-    <beans profile="datajpa">
-        <jpa:repositories base-package="ru.javawebinar.**.repository.datajpa"/>
-
-        <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
-            <jdbc:script location="${jdbc.initLocation}"/>
-            <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
-        </jdbc:initialize-database>
-
-        <tx:annotation-driven/>
-
-        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
-              p:entityManagerFactory-ref="entityManagerFactory"/>
-
-    </beans>
 </beans>
