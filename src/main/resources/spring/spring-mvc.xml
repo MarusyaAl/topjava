@@ -25,7 +25,7 @@
                 <value>messages/app</value>
             </list>
         </property>
-    </bean>
+    </bean>D
 -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
           p:cacheSeconds="5"
