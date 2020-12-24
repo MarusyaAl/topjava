@@ -30,9 +30,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     protected UserService service;
 
     @Autowired
-    private  Environment environment;
-
-    @Autowired
     private CacheManager cacheManager;
 
     @Autowired(required = false)
@@ -113,12 +110,4 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "password", 10001, true, new Date(), Set.of())), ConstraintViolationException.class);
     }
 
-    private  boolean jdbcIsActiveProfile() {
-        for (String profile : environment.getActiveProfiles()) {
-            if (profile.equals("jdbc")) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

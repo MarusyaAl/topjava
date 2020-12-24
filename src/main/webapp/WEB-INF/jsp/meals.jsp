@@ -5,19 +5,15 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
-<head>
-    <!--  <title>Meals</title>-->
-    <h3><spring:message code="meal.title"/></h3>
     <link rel="stylesheet" href="css/style.css">
-</head>
+
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <h3><a href="index.jsp"><spring:message code="common.home"/></a></h3>
     <hr/>
     <!-- <h2>Meals</h2> -->
     <h3><spring:message code="meal.title"/></h3>
-    <form method="get" action="filter">
+    <form method="get" action="meals/getBetween">
         <input type="hidden" name="action" value="filter">
         <dl>
             <dt>From Date (inclusive):</dt>
