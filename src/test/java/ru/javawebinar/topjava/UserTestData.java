@@ -4,8 +4,7 @@ import org.hibernate.mapping.Value;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
@@ -24,13 +23,20 @@ public class UserTestData {
     }
 
     public static User getUpdated() {
-        User updated = new User(user);
+        User updated = new User(admin);
         updated.setEmail("update@gmail.com");
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
         updated.setPassword("newPass");
         updated.setEnabled(false);
-        updated.setRoles(Collections.singletonList(Role.ADMIN));
+        updated.setRoles(getRoles());
         return updated;
+    }
+
+    public static List<Role> getRoles(){
+        List<Role> roles = new ArrayList<>();
+        roles.add(Role.ADMIN);
+        roles.add(Role.USER);
+        return roles;
     }
 }

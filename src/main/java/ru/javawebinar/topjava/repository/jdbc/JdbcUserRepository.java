@@ -28,8 +28,6 @@ public class JdbcUserRepository implements UserRepository {
 
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
 
-    private static final BeanPropertyRowMapper<Role> ROW_MAPPER_ROLES = BeanPropertyRowMapper.newInstance(Role.class);
-
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -61,8 +59,6 @@ public class JdbcUserRepository implements UserRepository {
     @Transactional
     public User save(User user) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
-
-        String sqlSetRoles = "UPDATE user_roles SET roles WHERE user_id =?";
 
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
@@ -101,12 +97,13 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User get(int id) {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users LEFT JOIN user_roles rol ON users.id = rol.user_id WHERE id=?", ROW_MAPPER, id);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
         String sqlRoles = "SELECT role FROM user_roles WHERE user_id = ?";
-        List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, id);
+        setRoles(sqlRoles, users, id);
+    /*    List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, id);
         for (User user : users) {
             user.setRoles(roles);
-        }
+        }*/
 
         return DataAccessUtils.singleResult(users);
     }
@@ -115,10 +112,11 @@ public class JdbcUserRepository implements UserRepository {
     public User getByEmail(String email) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
         String sqlRoles = "SELECT role FROM user_roles WHERE user_id IN (SELECT  id FROM users WHERE email = ?)";
-        List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, email);
+        setRoles(sqlRoles, users, email);
+       /* List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, email);
         for (User user : users) {
             user.setRoles(roles);
-        }
+        }*/
 
         return DataAccessUtils.singleResult(users);
     }
@@ -134,5 +132,12 @@ public class JdbcUserRepository implements UserRepository {
             user.setRoles(roles);
         }
         return users;
+    }
+
+    private void setRoles(String sqlRoles, List<User> users, Object emailOrId) {
+        List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, emailOrId);
+        for (User user : users) {
+            user.setRoles(roles);
+        }
     }
 }
