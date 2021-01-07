@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava;
 
 import org.springframework.test.web.servlet.ResultMatcher;
+import ru.javawebinar.topjava.to.MealTo;
 
 import java.util.List;
 
@@ -42,5 +43,9 @@ public class TestMatcher<T> {
 
     public ResultMatcher contentJson(Iterable<T> expected) {
         return result -> assertMatch(readListFromJsonMvcResult(result, clazz), expected);
+    }
+
+    public void assertMatch(List<MealTo> actual, List<MealTo> tos) {
+
     }
 }
