@@ -32,7 +32,7 @@
     <hr>
     <a href="meals/create"><spring:message code="meal.add"/></a>
     <hr>
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table class="table table-striped" id="datatable">
         <thead>
         <tr>
             <th><spring:message code="meal.dateTime"/></th>
@@ -59,6 +59,7 @@
         </c:forEach>
     </table>
 </section>
+
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
