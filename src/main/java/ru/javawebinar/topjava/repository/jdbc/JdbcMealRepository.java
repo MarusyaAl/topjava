@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import javax.validation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,6 +27,9 @@ public class JdbcMealRepository implements MealRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final SimpleJdbcInsert insertMeal;
+
+    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    Validator validator = validatorFactory.getValidator();
 
     public JdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.insertMeal = new SimpleJdbcInsert(jdbcTemplate)
@@ -47,8 +51,14 @@ public class JdbcMealRepository implements MealRepository {
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
-            Number newId = insertMeal.executeAndReturnKey(map);
-            meal.setId(newId.intValue());
+            validator.validate(meal);
+            if (validator.validate(meal).isEmpty()) {
+                Number newId = insertMeal.executeAndReturnKey(map);
+                meal.setId(newId.intValue());
+            } else {
+                throw new ConstraintViolationException(validator.validate(meal));
+            }
+
         } else {
             if (namedParameterJdbcTemplate.update("" +
                     "UPDATE meals " +
