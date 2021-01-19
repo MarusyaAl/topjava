@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava;
 
-import org.hibernate.mapping.Value;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
@@ -38,5 +37,17 @@ public class UserTestData {
         roles.add(Role.ADMIN);
         roles.add(Role.USER);
         return roles;
+    }
+
+    public static User getUpdatedUser() {
+        User updated = new User(user);
+        updated.setRoles(getRoles());
+        return updated;
+    }
+
+    public static User getUpdatedUserWithoutROles() {
+        User updated = new User(user);
+        updated.setCaloriesPerDay(900);
+        return updated;
     }
 }

@@ -99,7 +99,6 @@ public class JspMealController {
         service.getBetweenInclusive(startDate, endDate, userId);
 
         List<Meal> mealsDateFiltered = service.getBetweenInclusive(startDate, endDate, userId);
-        //  MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
 
         model.addAttribute("meals", MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime));
         return "meals";

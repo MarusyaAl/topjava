@@ -3,7 +3,10 @@ package ru.javawebinar.topjava.repository.jdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -13,6 +16,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import javax.validation.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,8 +34,10 @@ public class JdbcUserRepository implements UserRepository {
 
     private final SimpleJdbcInsert insertUser;
 
+    private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = validatorFactory.getValidator();
 
-    ResultSetExtractor<List<Role>> RESULT_SET_EXTRACTOR = new ResultSetExtractor<List<Role>>() {
+    private final ResultSetExtractor<List<Role>> RESULT_SET_EXTRACTOR = new ResultSetExtractor<List<Role>>() {
         @Override
         public List<Role> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
             List<Role> roles = new ArrayList<>();
@@ -75,39 +81,48 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     @Transactional
     public User save(User user) {
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
-        List<Role> roles = new ArrayList<>();
-        if (user.isNew()) {
-            Number newKey = insertUser.executeAndReturnKey(parameterSource);
-            user.setId(newKey.intValue());
-            roles.addAll(user.getRoles());
-        } else if (namedParameterJdbcTemplate.update("""
-                   UPDATE users SET name=:name, email=:email, password=:password, 
-                   registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id
-                """, parameterSource) == 0) {
-            return null;
+        final Set<ConstraintViolation<User>> userValidateVariable = validator.validate(user);
+        if (userValidateVariable.isEmpty()) {
+            BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+            List<Role> roles = new ArrayList<>();
+            if (user.isNew()) {
+                Number newKey = insertUser.executeAndReturnKey(parameterSource);
+                user.setId(newKey.intValue());
+                roles.addAll(user.getRoles());
+            } else if (namedParameterJdbcTemplate.update("""
+                       UPDATE users SET name=:name, email=:email, password=:password, 
+                       registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id
+                    """, parameterSource) == 0) {
+                return null;
+            } else {
+                if (!user.getRoles().isEmpty()) {
+                    roles.addAll(user.getRoles());
+                } else {
+                    String sqlRoles = "SELECT role FROM user_roles WHERE user_id = ?";
+                    roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, user.id());
+                }
+            }
+
+            jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", user.id());
+
+            List<Role> finalRoles = roles;
+            jdbcTemplate.batchUpdate(
+                    "INSERT INTO user_roles (user_id, role) VALUES (?, ? )",
+                    new BatchPreparedStatementSetter() {
+                        public void setValues(PreparedStatement ps, int i)
+                                throws SQLException {
+                            ps.setInt(1, user.getId());
+                            ps.setString(2, finalRoles.get(i).toString());
+
+                        }
+
+                        public int getBatchSize() {
+                            return finalRoles.size();
+                        }
+                    });
         } else {
-            String sqlRoles = "SELECT role FROM user_roles WHERE user_id = ?";
-            roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, user.id());
+            throw new ConstraintViolationException(userValidateVariable);
         }
-
-        jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", user.id());
-
-        List<Role> finalRoles = roles;
-        jdbcTemplate.batchUpdate(
-                "INSERT INTO user_roles (user_id, role) VALUES (?, ? )",
-                new BatchPreparedStatementSetter() {
-                    public void setValues(PreparedStatement ps, int i)
-                            throws SQLException {
-                        ps.setInt(1, user.getId());
-                        ps.setString(2, finalRoles.get(i).toString());
-
-                    }
-
-                    public int getBatchSize() {
-                        return finalRoles.size();
-                    }
-                });
         return user;
     }
 
@@ -120,26 +135,14 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public User get(int id) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
-        String sqlRoles = "SELECT role FROM user_roles WHERE user_id = ?";
-        setRoles(sqlRoles, users, id);
-    /*    List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, id);
-        for (User user : users) {
-            user.setRoles(roles);
-        }*/
-
+        setRoles(users, id);
         return DataAccessUtils.singleResult(users);
     }
 
     @Override
     public User getByEmail(String email) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        String sqlRoles = "SELECT role FROM user_roles WHERE user_id IN (SELECT  id FROM users WHERE email = ?)";
-        setRoles(sqlRoles, users, email);
-       /* List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, email);
-        for (User user : users) {
-            user.setRoles(roles);
-        }*/
-
+        setRoles(users, users.get(0).getId());
         return DataAccessUtils.singleResult(users);
     }
 
@@ -148,13 +151,14 @@ public class JdbcUserRepository implements UserRepository {
         List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
         Map<Integer, Set<Role>> roles = jdbcTemplate.query("SELECT * FROM user_roles", RESULT_SET_EXTRACTOR_ROLES);
         for (User user : users) {
-            user.setRoles(roles.get(user.getId()));
+            user.setRoles(roles.get(user.id()));
         }
         return users;
     }
 
-    private void setRoles(String sqlRoles, List<User> users, Object emailOrId) {
-        List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, emailOrId);
+    private void setRoles(List<User> users, int userId) {
+        String sqlRoles = "SELECT role FROM user_roles WHERE user_id  = ?";
+        List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, userId);
         for (User user : users) {
             user.setRoles(roles);
         }
