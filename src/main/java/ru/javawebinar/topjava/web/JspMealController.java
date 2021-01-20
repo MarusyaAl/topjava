@@ -59,7 +59,7 @@ public class JspMealController {
         return "mealForm";
     }
 
-    @PostMapping("save")
+    @PostMapping()
     public String edit(HttpServletRequest request) {
         int userId = SecurityUtil.authUserId();
         int mealId;
@@ -96,7 +96,7 @@ public class JspMealController {
         LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
         LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
         log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
-        service.getBetweenInclusive(startDate, endDate, userId);
+      //  service.getBetweenInclusive(startDate, endDate, userId);
 
         List<Meal> mealsDateFiltered = service.getBetweenInclusive(startDate, endDate, userId);
 

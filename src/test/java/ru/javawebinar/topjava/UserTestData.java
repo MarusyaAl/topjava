@@ -50,4 +50,10 @@ public class UserTestData {
         updated.setCaloriesPerDay(900);
         return updated;
     }
+
+    public static User getUpdatedUserWithZeroRoles() {
+        User updated = new User(user);
+        updated.setRoles(Collections.emptyList());
+        return updated;
+    }
 }
