@@ -8,16 +8,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
-import ru.javawebinar.topjava.web.SecurityUtil;
 import ru.javawebinar.topjava.web.json.JsonUtil;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,14 +18,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.readFromJson;
-import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 public class MealRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = MealRestController.REST_URL + '/';
-
-    private static final LocalDateTime startLocalDateTime = LocalDateTime.parse("2020-01-30T10:15:30", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-    private static final LocalDateTime endLocalDateTime = LocalDateTime.parse("2020-01-31T10:15:30", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
     @Autowired
     private MealService mealService;
@@ -85,15 +76,22 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(meals));
-           //     .andExpect(MEAL_MATCHER.contentJson(mealsAll));
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealsAll));
     }
 
     @Test
     void getBetween() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "between?startDateTime=" + startLocalDateTime + "&endDateTime=" + endLocalDateTime ))
+        perform(MockMvcRequestBuilders.get(REST_URL + "between?startDateTime=2020-01-30T15:15:30&endDateTime=2020-01-31T22:15:30"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(mealsBetween));
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealsBetween));
+    }
+
+    @Test
+    void getBetweenDateTimeSeparete() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "between?startDate=2020-01-30&startTime=12:15:30&endDate=2020-01-31&endTime=22:15:30"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealsBetween));
     }
 }

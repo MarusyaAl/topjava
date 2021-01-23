@@ -15,7 +15,8 @@ import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 public class MealTestData {
     public static final TestMatcher<Meal> MEAL_MATCHER = TestMatcher.usingIgnoringFieldsComparator(Meal.class, "user");
 
-    public static final TestMatcher<Meal> MEAL_MATCHER_JSON = TestMatcher.usingIgnoringFieldsComparator(Meal.class, "user", "excess");
+    public static final TestMatcher<MealTo> MEAL_TO_MATCHER = TestMatcher.usingIgnoringFieldsComparator(MealTo.class, "user", "excess");
+
 
     public static final int NOT_FOUND = 10;
     public static final int MEAL1_ID = START_SEQ + 2;
@@ -41,7 +42,7 @@ public class MealTestData {
         return new Meal(MEAL1_ID, meal1.getDateTime().plus(2, ChronoUnit.MINUTES), "Обновленный завтрак", 200);
     }
 
-    public static final List<Meal> mealsBetween = List.of( meal6, meal5, meal4, meal3);
+    public static final List<MealTo> mealsBetween = MealsUtil.getTos(List.of(meal7, meal3), SecurityUtil.authUserCaloriesPerDay());
 
     public static final List<MealTo> mealsAll = MealsUtil.getTos(meals, SecurityUtil.authUserCaloriesPerDay());
 }

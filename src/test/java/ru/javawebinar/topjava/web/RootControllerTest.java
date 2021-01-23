@@ -44,7 +44,7 @@ class RootControllerTest extends AbstractControllerTest {
                         new AssertionMatcher<List<MealTo>>() {
                             @Override
                             public void assertion(List<MealTo> actual) throws AssertionError {
-                                MEAL_MATCHER.assertMatch(actual, MealsUtil.getTos(List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1), SecurityUtil.authUserCaloriesPerDay()));
+                                MEAL_TO_MATCHER.assertMatch(actual, MealsUtil.getTos(List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1), SecurityUtil.authUserCaloriesPerDay()));
                             }
                         }
                 ));

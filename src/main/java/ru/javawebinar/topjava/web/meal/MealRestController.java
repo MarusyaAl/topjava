@@ -10,7 +10,8 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -37,7 +38,6 @@ public class MealRestController extends AbstractMealController {
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
-        // непонятно, как все параметры принимать, типа калорий, description и т.д.
     }
 
     @Override
@@ -55,9 +55,29 @@ public class MealRestController extends AbstractMealController {
     }
 
     @GetMapping("/between")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    public List<MealTo> getBetween(@RequestParam LocalDateTime startDateTime, LocalDateTime endDateTime) {
-    //    return super.getBetween(startDateTime, startDateTime.toLocalTime(), endDateTime, endDateTime.toLocalTime());
-       return super.getBetween(startDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalDate(), endDateTime.toLocalTime());
+    public List<MealTo> getBetween(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                    LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+                    LocalTime startTime,
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    LocalDate endDate,
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    LocalTime endTime) {
+        return super.getBetween(startDate, startTime, endDate, endTime);
     }
+
+/*    @GetMapping("/between")
+    public List<MealTo> getBetween(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    LocalDateTime startDateTime,
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    LocalDateTime endDateTime) {
+        return super.getBetween(startDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalDate(), endDateTime.toLocalTime());
+    }*/
 }

@@ -45,7 +45,4 @@ public class TestMatcher<T> {
         return result -> assertMatch(readListFromJsonMvcResult(result, clazz), expected);
     }
 
-    public void assertMatch(List<MealTo> actual, List<MealTo> tos) {
-
-    }
 }
