@@ -10,6 +10,9 @@ public class ValidationUtil {
     private ValidationUtil() {
     }
 
+    final static ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    final static Validator validator = validatorFactory.getValidator();
+
     public static <T> T checkNotFoundWithId(T object, int id) {
         checkNotFoundWithId(object != null, id);
         return object;
@@ -56,10 +59,9 @@ public class ValidationUtil {
         return result;
     }
 
-    public static void jdbcValidation(Object userOrMeal){
-         final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-         final Validator validator = validatorFactory.getValidator();
-        final Set<ConstraintViolation<Object>> constraints = validator.validate(userOrMeal);
+    public static void jdbcValidation(Object object){
+
+        final Set<ConstraintViolation<Object>> constraints = validator.validate(object);
         if (!constraints.isEmpty()) {
             throw new ConstraintViolationException(constraints);
         }
