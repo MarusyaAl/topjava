@@ -44,5 +44,7 @@ public class MealTestData {
 
     public static final List<MealTo> mealsBetween = MealsUtil.getTos(List.of(meal7, meal3), SecurityUtil.authUserCaloriesPerDay());
 
+    public static final List<MealTo> mealsBetweenZeroTime = MealsUtil.getTos(List.of(meal3, meal2, meal1), SecurityUtil.authUserCaloriesPerDay());
+
     public static final List<MealTo> mealsAll = MealsUtil.getTos(meals, SecurityUtil.authUserCaloriesPerDay());
 }
