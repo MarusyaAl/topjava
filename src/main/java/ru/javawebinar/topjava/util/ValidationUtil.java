@@ -59,8 +59,7 @@ public class ValidationUtil {
         return result;
     }
 
-    public static void jdbcValidation(Object object){
-
+    public static <T> void jdbcValidation(T object){
         final Set<ConstraintViolation<Object>> constraints = validator.validate(object);
         if (!constraints.isEmpty()) {
             throw new ConstraintViolationException(constraints);
