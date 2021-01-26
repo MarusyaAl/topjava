@@ -121,13 +121,13 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public User get(int id) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
-        return setRoles(users, id);
+        return setRoles(users);
     }
 
     @Override
     public User getByEmail(String email) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        return setRoles(users, users.get(0).getId());
+        return setRoles(users);
     }
 
     @Override
@@ -140,12 +140,15 @@ public class JdbcUserRepository implements UserRepository {
         return users;
     }
 
-    private User setRoles(List<User> users, int userId) {
+    private User setRoles(List<User> users) {
+        User user = DataAccessUtils.singleResult(users);
+        if (user == null){
+            return null;
+        }
+        int userId = user.getId();
         String sqlRoles = "SELECT role FROM user_roles WHERE user_id  = ?";
         List<Role> roles = jdbcTemplate.query(sqlRoles, RESULT_SET_EXTRACTOR, userId);
-        for (User user : users) {
-            user.setRoles(roles);
-        }
-        return DataAccessUtils.singleResult(users);
+        user.setRoles(roles);
+        return user;
     }
 }
