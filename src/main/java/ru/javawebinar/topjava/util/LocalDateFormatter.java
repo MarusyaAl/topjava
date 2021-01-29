@@ -18,9 +18,9 @@ public class LocalDateFormatter implements Formatter<LocalDate> {
         if (text.isEmpty()) {
             return null;
         }
-        Locale localeRu = new Locale("ru");
+    //    Locale localeRu = new Locale("ru");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        formatter = formatter.withLocale(localeRu);
+    //    formatter = formatter.withLocale(localeRu);
         return LocalDate.parse(text, formatter);
 
     }
