@@ -10,7 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class LocalDateFormatter implements Formatter<LocalDate> {
-
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final String PATTERN = "yyyy-MM-dd";
 
     @Override
     public LocalDate parse(
@@ -18,20 +19,16 @@ public class LocalDateFormatter implements Formatter<LocalDate> {
         if (text.isEmpty()) {
             return null;
         }
-    //    Locale localeRu = new Locale("ru");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    //    formatter = formatter.withLocale(localeRu);
-        return LocalDate.parse(text, formatter);
+        //    Locale localeRu = new Locale("ru");
+        //    formatter = formatter.withLocale(localeRu);
+        return LocalDate.parse(text, FORMATTER);
 
     }
 
     @Override
     public String print(LocalDate date, Locale locale) {
-        if (date == null) {
-            return "";
-        }
-        String pattern = "yyyy-MM-dd";
-        DateFormat df = new SimpleDateFormat(pattern);
+
+        DateFormat df = new SimpleDateFormat(PATTERN);
         return df.format(date);
     }
 }
