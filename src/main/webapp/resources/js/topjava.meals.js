@@ -4,13 +4,13 @@ var ctx;
 $(function () {
     // https://stackoverflow.com/a/5064235/548473
     ctx = {
-        ajaxUrl: "/profile/meals/",
+        ajaxUrl: "profile/meals/",
         datatableApi: $("#datatable").DataTable({
             "paging": false,
             "info": true,
             "columns": [
                 {
-                    "data": "date"
+                    "data": "dateTime"
                 },
                 {
                     "data": "description"
