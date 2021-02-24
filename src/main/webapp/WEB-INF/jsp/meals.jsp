@@ -14,7 +14,7 @@
 
         <h3><spring:message code="meal.title"/></h3>
 
-        <form method="get" action="meals/filter">
+        <form id = "dateTimeFilter" method="get" action="meals/filter">
             <dl>
                 <dt><spring:message code="meal.startDate"/>:</dt>
                 <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
@@ -31,9 +31,9 @@
                 <dt><spring:message code="meal.endTime"/>:</dt>
                 <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
             </dl>
+            <button type="button" onclick="resetFilter()"><spring:message code="meal.cancelFilter"/></button>
             <button type="submit" onclick="filterByDate()"><spring:message code="meal.filter"/></button>
         </form>
-
 
         <button class="btn btn-primary" onclick="add()">
             <span class="fa fa-plus"></span>
@@ -52,7 +52,12 @@
             <c:forEach items="${meals}" var="meal">
                 <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
                 <tr>
-                    <td><fmt:formatDate value="${meal.dateTime}" pattern="dd-MMMM-yyyy"/></td>
+                    <td>
+                            <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
+                            <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
+                            <%--${fn:replace(meal.dateTime, 'T', ' ')}--%>
+                            ${fn:formatDateTime(meal.dateTime)}
+                    </td>
                     <td><c:out value="${meal.description}"/></td>
                     <td><c:out value="${meal.calories}"/></td>
                     <td><a><span class="fa fa-pencil"></span></a></td>
@@ -62,60 +67,6 @@
         </table>
     </div>
 </div>
-
-<%--<section>
-    <h3><spring:message code="meal.title"/></h3>
-
-    <form method="get" action="meals/filter">
-        <dl>
-            <dt><spring:message code="meal.startDate"/>:</dt>
-            <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
-        </dl>
-        <dl>
-            <dt><spring:message code="meal.endDate"/>:</dt>
-            <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
-        </dl>
-        <dl>
-            <dt><spring:message code="meal.startTime"/>:</dt>
-            <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
-        </dl>
-        <dl>
-            <dt><spring:message code="meal.endTime"/>:</dt>
-            <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
-        </dl>
-        <button type="submit"><spring:message code="meal.filter"/></button>
-    </form>
-    <hr>
-    <a href="meals/create"><spring:message code="meal.add"/></a>
-    <hr>
-    <table class="table table-striped" id="datatable">
-        <thead>
-        <tr>
-            <th><spring:message code="meal.dateTime"/></th>
-            <th><spring:message code="meal.description"/></th>
-            <th><spring:message code="meal.calories"/></th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <c:forEach items="${meals}" var="meal">
-            <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.MealTo"/>
-            <tr data-mealExcess="${meal.excess}">
-                <td>
-                        &lt;%&ndash;${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}&ndash;%&gt;
-                        &lt;%&ndash;<%=TimeUtil.toString(meal.getDateTime())%>&ndash;%&gt;
-                        &lt;%&ndash;${fn:replace(meal.dateTime, 'T', ' ')}&ndash;%&gt;
-                        ${fn:formatDateTime(meal.dateTime)}
-                </td>
-                <td>${meal.description}</td>
-                <td>${meal.calories}</td>
-                <td><a href="meals/update?id=${meal.id}"><spring:message code="common.update"/></a></td>
-                <td><a href="meals/delete?id=${meal.id}"><spring:message code="common.delete"/></a></td>
-            </tr>
-        </c:forEach>
-    </table>
-</section>--%>
-// коммент
 
 <div class="modal fade" tabindex="-1" id="editRow">
     <div class="modal-dialog">

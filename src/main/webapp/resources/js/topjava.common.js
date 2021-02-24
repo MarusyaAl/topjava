@@ -1,10 +1,12 @@
 var form;
+var filterForm;
 
 function makeEditable() {
     form = $('#detailsForm');
+    filterForm = $('#dateTimeFilter');
     $(".delete").click(function () {
         if (confirm('Are you sure?')) {
-            deleteRow($(this).parent().parent().attr(".id"));
+            deleteRow($(this).parent().parent().attr("id"));
         }
     });
 
@@ -46,6 +48,33 @@ function save() {
         $("#editRow").modal("hide");
         updateTable();
         successNoty("Saved");
+    });
+}
+
+function filterByDate() {
+    $.get({
+        url: ctx.ajaxUrl,
+        data: filterForm.serialize()
+    }).done(function () {
+        updateTable();
+    });
+}
+
+function resetFilter() {
+   filterForm[0].reset();
+    $.get({
+        url: ctx.ajaxUrl,
+        data: filterForm.serialize()
+    }).done(function () {
+        updateTable();
+    });
+}
+
+function checkBoxFunction(input, id) {
+    $.ajax({
+        type: "POST",
+        url: ctx.ajaxUrl + id,
+        data: input.is(":checked")
     });
 }
 
