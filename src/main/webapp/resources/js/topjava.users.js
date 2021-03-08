@@ -43,3 +43,11 @@ $(function () {
     };
     makeEditable();
 });
+
+function checkBoxFunction(input, id) {
+    $.ajax({
+        type: "POST",
+        url: ctx.ajaxUrl + id,
+        data: {enable: input.is(":checked") }
+    });
+}

@@ -53,7 +53,7 @@ function save() {
 
 function filterByDate() {
     $.get({
-        url: ctx.ajaxUrl,
+        url: ctx.ajaxUrl + "filter",
         data: filterForm.serialize()
     }).done(function () {
         updateTable();
@@ -70,13 +70,7 @@ function resetFilter() {
     });
 }
 
-function checkBoxFunction(input, id) {
-    $.ajax({
-        type: "POST",
-        url: ctx.ajaxUrl + id,
-        data: input.is(":checked")
-    });
-}
+
 
 var failedNote;
 

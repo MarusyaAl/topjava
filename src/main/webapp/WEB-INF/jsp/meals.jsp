@@ -32,7 +32,7 @@
                 <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
             </dl>
             <button type="button" onclick="resetFilter()"><spring:message code="meal.cancelFilter"/></button>
-            <button type="submit" onclick="filterByDate()"><spring:message code="meal.filter"/></button>
+            <button type="button" onclick="filterByDate()"><spring:message code="meal.filter"/></button>
         </form>
 
         <button class="btn btn-primary" onclick="add()">
@@ -51,7 +51,7 @@
             </thead>
             <c:forEach items="${meals}" var="meal">
                 <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
-                <tr>
+                <tr data-mealExcess="${meal.excess}">
                     <td>
                             <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
                             <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
