@@ -8,8 +8,6 @@ import ru.javawebinar.topjava.model.User;
 
 import java.util.List;
 
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
-
 @RestController
 @RequestMapping("/admin/users")
 public class AdminUIController extends AbstractUserController {
@@ -38,13 +36,7 @@ public class AdminUIController extends AbstractUserController {
     @PostMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void saveEnable(@RequestParam boolean enable, @PathVariable int id) {
-        User user = super.get(id);
-        super.saveEnable(enable, user);
+        super.saveEnable(enable, id);
     }
 
-/*    @GetMapping ("/{id}")
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = {"/with-meals"})
-    public User getWithMeals() {
-        return super.getWithMeals(authUserId());
-    }*/
 }

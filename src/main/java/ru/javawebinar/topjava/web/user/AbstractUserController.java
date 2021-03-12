@@ -49,9 +49,9 @@ public abstract class AbstractUserController {
         return service.getByEmail(email);
     }
 
-    public void saveEnable(boolean enable, User user) {
-        log.info("setEnable = {} for user = {}", enable, user);
-        service.saveEnable(enable, user);
+    public void saveEnable(boolean enable, int id) {
+        log.info("setEnable = {} for user = {}", enable, id);
+        service.saveEnable(enable, id);
     }
 
     public User getWithMeals(int id) {

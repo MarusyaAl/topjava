@@ -48,6 +48,17 @@ function checkBoxFunction(input, id) {
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl + id,
-        data: {enable: input.is(":checked") }
+        data: {enable: input.is(":checked")}
+    }).done(function () {
+        successNoty(input.is(":checked") ? "User enabled" : "User disabled");
+    });
+
+    $.ajax({
+        type: "POST",
+        url: ctx.ajaxUrl + id,
+        data: {enable: input.is(":checked")}
+    }).fail(function () {
+        failNoty();
+        $('#checkBox').reset();
     });
 }

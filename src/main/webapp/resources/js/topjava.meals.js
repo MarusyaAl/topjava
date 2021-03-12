@@ -37,3 +37,22 @@ $(function () {
     };
     makeEditable();
 });
+
+function filterByDate() {
+    $.get({
+        url: ctx.ajaxUrl + "filter",
+        data: filterForm.serialize()
+    }).done(function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+    });
+}
+
+function resetFilter() {
+    filterForm[0].reset();
+    $.get({
+        url: ctx.ajaxUrl,
+        data: filterForm.serialize()
+    }).done(function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+    });
+}

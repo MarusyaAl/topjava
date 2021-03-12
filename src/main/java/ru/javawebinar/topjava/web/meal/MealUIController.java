@@ -42,13 +42,16 @@ public class MealUIController extends AbstractMealController {
     }
 
     @GetMapping("/filter")
-    public List<MealTo> filter(@RequestParam
+    public List<MealTo> filter(@RequestParam (required = false)
                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                        LocalDate startDate,
+                               @RequestParam (required = false)
                                @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
                                        LocalTime startTime,
+                               @RequestParam (required = false)
                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                        LocalDate endDate,
+                               @RequestParam (required = false)
                                @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
                                        LocalTime endTime) {
         return super.getBetween(startDate, startTime, endDate, endTime);

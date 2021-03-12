@@ -51,27 +51,6 @@ function save() {
     });
 }
 
-function filterByDate() {
-    $.get({
-        url: ctx.ajaxUrl + "filter",
-        data: filterForm.serialize()
-    }).done(function () {
-        updateTable();
-    });
-}
-
-function resetFilter() {
-   filterForm[0].reset();
-    $.get({
-        url: ctx.ajaxUrl,
-        data: filterForm.serialize()
-    }).done(function () {
-        updateTable();
-    });
-}
-
-
-
 var failedNote;
 
 function closeNoty() {
