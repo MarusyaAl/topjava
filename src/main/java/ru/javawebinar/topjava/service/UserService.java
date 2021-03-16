@@ -61,7 +61,7 @@ public class UserService {
     @Transactional
     @CacheEvict(value = "users", allEntries = true)
     public void saveEnable(boolean enable, int id) {
-        User user = repository.get(id);
+        User user = get(id);
         if (user == null) {
             throw new NotFoundException("user " + id + "not found");
         }

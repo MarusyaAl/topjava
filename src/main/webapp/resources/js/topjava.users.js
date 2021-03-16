@@ -1,4 +1,5 @@
 var ctx;
+var inputCheck;
 
 // $(document).ready(function () {
 $(function () {
@@ -48,12 +49,12 @@ function checkBoxFunction(input, id) {
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl + id,
-        data: {enable: input.is(":checked")}
+        data: {enable: inputCheck = input.is(":checked")}
     }).done(function () {
         successNoty(input.is(":checked") ? "User enabled" : "User disabled");
-        input.closest("tr").attr("data-userEnable", input.is(":checked"));
+        input.closest("tr").attr("data-userEnable", inputCheck);
     }).fail(function (jqXHR) {
         failNoty(jqXHR);
-        input.prop("checked", !input.is(":checked"));
+        input.prop("checked", !inputCheck);
     });
 }

@@ -50,7 +50,7 @@ function filterByDate() {
 function resetFilter() {
     filterForm[0].reset();
     $.get({
-        data: filterForm.serialize()
+        url: ctx.ajaxUrl + "filter"
     }).done(function (data) {
         reDrawTable(data);
     });
