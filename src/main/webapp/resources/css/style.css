@@ -27,6 +27,10 @@ tr[data-userEnable="false"] {
     color: grey;
 }
 
+tr[data-userEnable="true"] {
+    color: black;
+}
+
 .fa {
     cursor: pointer;
 }

@@ -3,9 +3,11 @@ package ru.javawebinar.topjava.service;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -56,11 +58,14 @@ public class UserService {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
     }
 
+    @Transactional
     @CacheEvict(value = "users", allEntries = true)
     public void saveEnable(boolean enable, int id) {
         User user = repository.get(id);
-        Assert.notNull(user, "user must not be null");
+        if (user == null) {
+            throw new NotFoundException("user " + id + "not found");
+        }
         user.setEnabled(enable);
-        checkNotFoundWithId(repository.save(user), user.id());
+        repository.save(user);
     }
 }

@@ -78,3 +78,7 @@ function failNoty(jqXHR) {
         layout: "bottomRight"
     }).show();
 }
+
+function reDrawTable(data) {
+    ctx.datatableApi.clear().rows.add(data).draw();
+}

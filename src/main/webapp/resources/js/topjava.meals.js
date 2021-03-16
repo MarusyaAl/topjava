@@ -43,16 +43,15 @@ function filterByDate() {
         url: ctx.ajaxUrl + "filter",
         data: filterForm.serialize()
     }).done(function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
+        reDrawTable(data);
     });
 }
 
 function resetFilter() {
     filterForm[0].reset();
     $.get({
-        url: ctx.ajaxUrl,
         data: filterForm.serialize()
     }).done(function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
+        reDrawTable(data);
     });
 }

@@ -51,14 +51,9 @@ function checkBoxFunction(input, id) {
         data: {enable: input.is(":checked")}
     }).done(function () {
         successNoty(input.is(":checked") ? "User enabled" : "User disabled");
-    });
-
-    $.ajax({
-        type: "POST",
-        url: ctx.ajaxUrl + id,
-        data: {enable: input.is(":checked")}
-    }).fail(function () {
-        failNoty();
-        $('#checkBox').reset();
+        input.closest("tr").attr("data-userEnable", input.is(":checked"));
+    }).fail(function (jqXHR) {
+        failNoty(jqXHR);
+        input.prop("checked", !input.is(":checked"));
     });
 }
