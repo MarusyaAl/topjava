@@ -31,7 +31,7 @@ public class Meal extends AbstractBaseEntity {
     public static final String DELETE = "Meal.delete";
     public static final String GET_BETWEEN = "Meal.getBetween";
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;

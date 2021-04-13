@@ -70,3 +70,31 @@ $('#datetimepicker').datetimepicker({
     inline:false,
     lang:'ru'
 });
+
+$('#startDate').datetimepicker({
+    format:'d.m.Y',
+    timepicker: false,
+    inline:false,
+    lang:'ru'
+});
+
+$('#endDate').datetimepicker({
+    format:'d.m.Y',
+    timepicker: false,
+    inline:false,
+    lang:'ru'
+});
+
+$('#startTime').datetimepicker({
+    format:'H:i',
+    datepicker: false,
+    inline:false,
+    lang:'ru'
+});
+
+$('#endTime').datetimepicker({
+    format:'H:i',
+    datepicker: false,
+    inline:false,
+    lang:'ru'
+});
