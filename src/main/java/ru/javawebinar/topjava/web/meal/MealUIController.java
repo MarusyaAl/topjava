@@ -8,17 +8,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.Util;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,9 +56,13 @@ public class MealUIController extends AbstractMealController {
     @Override
     @GetMapping(value = "/filter")
     public List<MealTo> getBetween(
+            @DateTimeFormat(pattern = "dd.MM.yyyy")
             @RequestParam @Nullable LocalDate startDate,
+            @DateTimeFormat(pattern = "HH:mm")
             @RequestParam @Nullable LocalTime startTime,
+            @DateTimeFormat(pattern = "dd.MM.yyyy")
             @RequestParam @Nullable LocalDate endDate,
+            @DateTimeFormat(pattern = "HH:mm")
             @RequestParam @Nullable LocalTime endTime) {
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
