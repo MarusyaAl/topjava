@@ -71,13 +71,13 @@ $('#datetimepicker').datetimepicker({
 });
 
 $('#startDate').datetimepicker({
-    format:'d.m.Y',
+    format:'Y-m-d',
     timepicker: false,
     lang:'ru'
 });
 
 $('#endDate').datetimepicker({
-    format:'d.m.Y',
+    format:'Y-m-d',
     timepicker: false,
     lang:'ru'
 });
