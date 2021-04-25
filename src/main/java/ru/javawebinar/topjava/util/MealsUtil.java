@@ -16,10 +16,6 @@ public class MealsUtil {
     private MealsUtil() {
     }
 
- /*   public static Meal createNewFromTo(MealTo mealTo) {
-        return new Meal(null, mealTo.getDateTime(), mealTo.getDescription(), mealTo.getCalories());
-    }*/
-
     public static List<MealTo> getTos(Collection<Meal> meals, int caloriesPerDay) {
         return filterByPredicate(meals, caloriesPerDay, meal -> true);
     }
@@ -45,10 +41,4 @@ public class MealsUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-/*    public static Meal updateFromTo(Meal meal, MealTo mealTo) {
-        meal.setDateTime(mealTo.getDateTime());
-        meal.setDescription(mealTo.getDescription());
-        meal.setCalories(mealTo.getCalories());
-        return meal;
-    }*/
 }

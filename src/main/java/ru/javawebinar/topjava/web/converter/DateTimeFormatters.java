@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.web.converter;
 
 import org.springframework.format.Formatter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
