@@ -13,7 +13,6 @@ public class MealTo extends BaseTo {
 
     private boolean excess;
 
-  //   @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         super(id);
         this.dateTime = dateTime;
