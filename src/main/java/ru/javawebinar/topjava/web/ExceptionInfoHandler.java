@@ -25,6 +25,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Locale;
+
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 
 @RestControllerAdvice(annotations = RestController.class)
@@ -94,8 +96,7 @@ public class ExceptionInfoHandler {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
         if (rootCause instanceof PSQLException) {
-            return rootCause.getLocalizedMessage();
-            // messageSource.getMessage("user.emailErrorText",  rootCause.getLocalizedMessage(), Locale.ENGLISH);
+            return messageSource.getMessage("user.emailErrorText", null, Locale.ENGLISH);
         } else {
             FieldError fieldError = ((BindException) rootCause).getFieldErrors().get(0);
             return fieldError.getField() + " " + fieldError.getDefaultMessage();
