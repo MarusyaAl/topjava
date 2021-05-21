@@ -40,11 +40,26 @@ public class UserTestData {
         return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.USER));
     }
 
+    public static User getNewWithInvalidDate() {
+        return new User(null, "NewWithInvalidDate", "new@gmail.com", "newPass", 3, false, new Date(), Collections.singleton(Role.USER));
+    }
+
     public static User getUpdated() {
         User updated = new User(user);
         updated.setEmail("update@gmail.com");
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
+        updated.setPassword("newPass");
+        updated.setEnabled(false);
+        updated.setRoles(Collections.singletonList(Role.ADMIN));
+        return updated;
+    }
+
+    public static User getUpdatedWithInvalidDate() {
+        User updated = new User(user);
+        updated.setEmail("update@gmail.com");
+        updated.setName("UpdatedName");
+        updated.setCaloriesPerDay(3);
         updated.setPassword("newPass");
         updated.setEnabled(false);
         updated.setRoles(Collections.singletonList(Role.ADMIN));

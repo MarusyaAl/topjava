@@ -145,4 +145,25 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_WITH_MEALS_MATCHER.contentJson(admin));
     }
+
+    @Test
+    void createWithInvalidDate() throws Exception {
+        User newUserWithInvalidDate = UserTestData.getNewWithInvalidDate();
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(UserTestData.jsonWithPassword(newUserWithInvalidDate, "newPass")))
+                .andExpect(status().is4xxClientError()); // status.is(422)
+
+    }
+
+    @Test
+    void updateWithInvalidDate() throws Exception {
+        User updated = UserTestData.getUpdatedWithInvalidDate();
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().is(422));
+    }
 }

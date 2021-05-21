@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.SessionStatus;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.web.SecurityUtil;
@@ -22,16 +23,16 @@ public class ProfileUIController extends AbstractUserController {
     }
 
     @PostMapping
-    public String updateProfile(@Valid UserTo userTo, BindingResult result, SessionStatus status) {
-        if (result.hasErrors()) {
+    public String updateProfile(@Valid UserTo userTo) {
+/*        if (result.hasErrors()) {
             return "profile";
-        } else {
+        } else {*/
             super.update(userTo, SecurityUtil.authUserId());
             SecurityUtil.get().update(userTo);
-            status.setComplete();
+          //  status.setComplete();
             return "redirect:/meals";
         }
-    }
+   // }
 
     @GetMapping("/register")
     public String register(ModelMap model) {
@@ -42,6 +43,7 @@ public class ProfileUIController extends AbstractUserController {
 
     @PostMapping("/register")
     public String saveRegister(@Valid UserTo userTo, BindingResult result, SessionStatus status, ModelMap model) {
+        //result.rejectValue("email", "user.emailErrorText");
         if (result.hasErrors()) {
             model.addAttribute("register", true);
             return "profile";

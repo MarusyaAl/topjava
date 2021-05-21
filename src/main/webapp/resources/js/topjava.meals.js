@@ -21,7 +21,7 @@ $.ajaxSetup({
     converters: {
         "text json": function (stringData) {
             var json = JSON.parse(stringData);
-            if (typeof json === 'object') {
+            if (typeof json === 'object' && json.dateTime !== undefined) {
                 $(json).each(function () {
                     this.dateTime = this.dateTime.substr(0, 16).replace('T', ' ');
                 });
