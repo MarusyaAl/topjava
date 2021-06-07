@@ -69,4 +69,15 @@ public class UserTestData {
     public static String jsonWithPassword(User user, String passw) {
         return JsonUtil.writeAdditionProps(user, "password", passw);
     }
+
+    public static User createUserWithDoubleEmail() {
+        User updated = new User(user);
+        updated.setEmail("admin@gmail.com");
+        updated.setName("NewAdmin");
+        updated.setCaloriesPerDay(500);
+        updated.setPassword("password");
+        updated.setEnabled(false);
+        updated.setRoles(Collections.singletonList(Role.ADMIN));
+        return updated;
+    }
 }

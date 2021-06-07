@@ -35,18 +35,12 @@ public class AdminUIController extends AbstractUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void createOrUpdate(@Valid UserTo userTo) {
-/*        if (result.hasErrors()){
-            model.addAttribute("register", true);
-            returnProfile();
-        }
-        else {*/
             if (userTo.isNew()) {
                 super.create(userTo);
             } else {
                 super.update(userTo, userTo.id());
             }
         }
-  //  }
 
     @Override
     @PostMapping("/{id}")

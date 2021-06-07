@@ -166,4 +166,14 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().is(422));
     }
+
+    @Test
+    void createUserWithDoubleEmail() throws Exception {
+        User updated = UserTestData.createUserWithDoubleEmail();
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().is(422));
+    }
 }

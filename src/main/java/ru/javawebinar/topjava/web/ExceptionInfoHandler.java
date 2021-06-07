@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
@@ -46,7 +49,7 @@ public class ExceptionInfoHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public String conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+    public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         return logAndGetErrorCause(req, e, true, DATA_ERROR);
     }
 
@@ -64,18 +67,9 @@ public class ExceptionInfoHandler {
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(BindException.class)
-    public String validationError(HttpServletRequest req, Exception e) {
+    public ErrorInfo validationError(HttpServletRequest req, Exception e) {
         return logAndGetErrorCause(req, e, true, VALIDATION_ERROR);
     }
-
-/*
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public String dataError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorCause(req, e, true, VALIDATION_ERROR);
-    }
-*/
-
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
@@ -85,10 +79,12 @@ public class ExceptionInfoHandler {
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, rootCause.toString());
+        String[] errorInfoArray = new String[1];
+        errorInfoArray[0] = rootCause.toString();
+        return new ErrorInfo(req.getRequestURL(), errorType, errorInfoArray);
     }
 
-    private static String logAndGetErrorCause(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
+    private static ErrorInfo logAndGetErrorCause(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
@@ -96,12 +92,27 @@ public class ExceptionInfoHandler {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
         if (rootCause instanceof PSQLException) {
-            return messageSource.getMessage("user.emailErrorText", null, Locale.ENGLISH);
-        } else {
-            FieldError fieldError = ((BindException) rootCause).getFieldErrors().get(0);
-            return fieldError.getField() + " " + fieldError.getDefaultMessage();
+            String[] errorInfoArray = new String[1];
+            if (messageSource != null) {
+                errorInfoArray[0] = messageSource.getMessage("user.emailErrorText", null, Locale.ENGLISH);
+                return new ErrorInfo(req.getRequestURL(), errorType, errorInfoArray);
+            }
+            if (rootCause.getMessage().contains("users_unique_email_idx")) {
+                errorInfoArray[0] = "User with this email already exists";
+                return new ErrorInfo(req.getRequestURL(), errorType, errorInfoArray);
+            }
+            if (rootCause.getMessage().contains("meals_unique_user_datetime_idx")) {
+                errorInfoArray[0] = "Meal with this time already exists";
+                return new ErrorInfo(req.getRequestURL(), errorType, errorInfoArray);
+            }
         }
+        List<ObjectError> allErrors = ((BindException) rootCause).getAllErrors();
+        int errorArraySize = allErrors.size();
+        String[] errorInfoArray = new String[errorArraySize];
+        for (int i = 0; i < errorArraySize; i++) {
+            errorInfoArray[i] = allErrors.get(i).getDefaultMessage();
+        }
+        return new ErrorInfo(req.getRequestURL(), errorType, errorInfoArray);
     }
-
 
 }
